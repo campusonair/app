@@ -17,7 +17,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "react-share": "^4.1.0",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.2",
+    "video.js": "^7.7.5"
   },
   "scripts": {
     "start": ". ./.env && react-scripts start",
@@ -43,6 +44,7 @@
   "devDependencies": {
     "@types/qrcode.react": "^1.0.0",
     "@types/react-router-dom": "^5.1.4",
+    "@types/video.js": "^7.3.8",
     "node-sass": "^4.13.1"
   }
 }
