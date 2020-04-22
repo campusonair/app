@@ -1,22 +1,42 @@
 import * as React from "react";
-import VideoPlayer from "./VideoPlayer";
+import VideoContainer from "./VideoContainer";
+import Chat from "./Chat";
+import Notice from "./Notice";
+import Slide from "./Slide";
 
-const videoJsOptions = {
-  sources: [
-    {
-      src:
-        "https://15bcd044c531aa99.mediapackage.ap-northeast-1.amazonaws.com/out/v1/33de575936f14b54b4c642d4c0d2aadc/index.m3u8",
-      type: "application/x-mpegURL",
-    },
-  ],
-};
 
 type Props = {};
 
 const Content = (props: Props) => {
   return (
     <>
-      <VideoPlayer options={videoJsOptions} />;
+      <header style={{
+        backgroundColor: "gray",
+        padding: "20px"
+      }}>
+        <h1>Backlog World 2020 re:Union</h1>
+      </header>
+      <div style={{
+        height: "70vh",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+      }}>
+        <Slide />
+        <Chat />
+      </div>
+      <footer style={{
+        height: "20vh",
+        display: "flex",
+        justifyContent: "space-around",
+        alignItems: "center",
+        backgroundColor: "gray"
+      }}>
+        <div>Logo</div>
+        <div>QR</div>
+        <Notice />
+        <VideoContainer />
+      </footer>
     </>
   );
 };

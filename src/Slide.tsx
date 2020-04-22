@@ -1,3 +1,4 @@
+
 import * as React from "react";
 
 type Props = {};
@@ -5,7 +6,7 @@ type Props = {};
 const Content = (props: Props) => {
   return (
     <>
-      Hello
+      <div style={{ width: "70%", backgroundColor: "red", height: "auto" }}>Slide</div>
     </>
   );
 };

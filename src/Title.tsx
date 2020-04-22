@@ -5,7 +5,9 @@ type Props = {};
 const Content = (props: Props) => {
   return (
     <>
-      Hello
+      <div>
+        Hello
+    </div>
     </>
   );
 };

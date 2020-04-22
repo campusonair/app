@@ -34,7 +34,9 @@ const Content = (props: Props) => {
 
   return (
     <>
-      <video ref={videoNode} className="video-js" />
+      <div>
+        <video ref={videoNode} className="video-js" />
+      </div>
     </>
   );
 };
