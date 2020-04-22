@@ -4,9 +4,9 @@ import videojs from "video.js";
 // Styles
 import "video.js/dist/video-js.css";
 
-interface IVideoPlayerProps {
+type Props = {
   options: videojs.PlayerOptions;
-}
+};
 
 const initialOptions: videojs.PlayerOptions = {
   controls: true,
@@ -18,7 +18,7 @@ const initialOptions: videojs.PlayerOptions = {
   },
 };
 
-const VideoPlayer: React.FC<IVideoPlayerProps> = ({ options }) => {
+const Content = (props: Props) => {
   const videoNode = React.useRef<HTMLVideoElement>(null);
   const player = React.useRef<videojs.Player>();
 
@@ -28,11 +28,15 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({ options }) => {
     }
     player.current = videojs(videoNode.current, {
       ...initialOptions,
-      ...options,
+      ...props.options,
     });
-  }, [options]);
+  }, [props.options]);
 
-  return <video ref={videoNode} className="video-js" />;
+  return (
+    <>
+      <video ref={videoNode} className="video-js" />
+    </>
+  );
 };
 
-export default VideoPlayer;
+export default Content;
