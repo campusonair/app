@@ -16,7 +16,9 @@ type Props = {};
 const Content = (props: Props) => {
   return (
     <>
-      <VideoPlayer options={videoJsOptions} />
+      <div className={"video-container"}>
+        <VideoPlayer options={videoJsOptions} />
+      </div>
     </>
   );
 };

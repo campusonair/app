@@ -10,33 +10,50 @@ type Props = {};
 const Content = (props: Props) => {
   return (
     <>
-      <header style={{
-        backgroundColor: "gray",
-        padding: "20px"
-      }}>
-        <h1>Backlog World 2020 re:Union</h1>
-      </header>
-      <div style={{
-        height: "70vh",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center"
-      }}>
-        <Slide />
-        <Chat />
+      <div
+        className={"header"}
+        style={{
+          height: "7vh",
+          backgroundColor: "gray",
+          padding: "10px"
+        }}>
+        <h1>Example World 2020 re:Public</h1>
       </div>
-      <footer style={{
-        height: "20vh",
-        display: "flex",
-        justifyContent: "space-around",
-        alignItems: "center",
-        backgroundColor: "gray"
-      }}>
-        <div>Logo</div>
-        <div>QR</div>
-        <Notice />
-        <VideoContainer />
-      </footer>
+      <div className={"body"}>
+        <main className={"main"}>
+          <div className={"slide-container"}>
+            <Slide />
+          </div>
+        </main>
+        <aside className={"aside"}>
+          <div className={"chat-container"}>
+            <Chat />
+          </div>
+        </aside>
+      </div>
+      <div
+        className={"footer"}
+        style={{
+          height: "23vh",
+          backgroundColor: "gray"
+        }}>
+        <div className={"footer-container"} >
+          <div
+            className={"footer-container-left"}
+            style={{
+
+            }}>
+            <div className={"logo-container"}>Logo</div>
+            <div className={"qr-container"}>QR</div>
+            <div className={"notice-container"}>
+              <Notice />
+            </div>
+          </div>
+          <div className={"footer-container-right"}>
+            <VideoContainer />
+          </div>
+        </div>
+      </div>
     </>
   );
 };

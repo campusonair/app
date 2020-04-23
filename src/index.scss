@@ -4,6 +4,11 @@
   margin: 0;
   font-family: 'Hiragino Kaku Gothic Pro','ヒラギノ角ゴ Pro W3','メイリオ',Meiryo,'ＭＳ Ｐゴシック',sans-serif;
 }
+@media screen and (min-width: 1024px) {
+  *{
+    box-sizing: border-box;
+  }
+}
 
 img
 {
@@ -15,4 +20,102 @@ html, body, #root
 {
   width: 100%;
   height: 100%;
+}
+
+.slide-container{
+  width: 85%;
+  position: relative;
+  &::before {
+    content: "";
+    display: block;
+    padding-top: 56.25%;
+  }
+}
+
+.slide{
+  background-color: red;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.video-container{
+  width: 62%;
+  position: relative;
+  &::before {
+    content: "";
+    display: block;
+    padding-top: 56.25%;
+  }
+}
+
+.video-js{
+  background-color:palegreen;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.body{
+  height: 70vh;
+  display: flex;
+  max-width: 1800px;
+  margin: auto;
+}
+
+.main{
+  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aside{
+  width: 30%;
+  display: flex;
+  align-items: center;
+}
+
+.chat-container{
+  background-color: blue;
+  height: 95%;
+  width: 75%;
+}
+
+.footer-container{
+  max-width: 1800px;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.footer-container-left{
+  background-color:gainsboro;
+  width: 70%;
+  display: flex;
+}
+.footer-container-right{
+  background-color:fuchsia;
+  display: flex;
+  justify-content: left;
+  align-items: flex-start;
+  width: 30%;
+}
+
+.logo-container{
+  width: 25%;
+  background-color: gold;
+}
+.qr-container{
+  width: 25%;
+  background-color:orange;
+}
+
+.notice-container{
+  width: 63%;
 }
