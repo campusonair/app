@@ -1,0 +1,9 @@
+.slide-container{
+  width: 85%;
+  position: relative;
+  &::before {
+    content: "";
+    display: block;
+    padding-top: 56.25%;
+  }
+}

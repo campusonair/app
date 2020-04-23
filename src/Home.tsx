@@ -1,57 +1,42 @@
 import * as React from "react";
 import VideoContainer from "./VideoContainer";
-import Chat from "./Chat";
-import Notice from "./Notice";
-import Slide from "./Slide";
-
+import SlideContainer from "./SlideContainer";
+import ChatContainer from "./ChatContainer";
+import NoticeContainer from "./NoticeContainer";
+import QrContainer from "./QrContainer";
+import LogoContainer from "./LogoContainer";
+import "./Home.scss";
 
 type Props = {};
 
 const Content = (props: Props) => {
   return (
     <>
-      <div
-        className={"header"}
-        style={{
-          height: "7vh",
-          backgroundColor: "gray",
-          padding: "10px"
-        }}>
+      <div className={"home-header"}>
         <h1>Example World 2020 re:Public</h1>
       </div>
-      <div className={"body"}>
-        <main className={"main"}>
-          <div className={"slide-container"}>
-            <Slide />
-          </div>
+      <div className={"home-body"}>
+        <main className={"home-main"}>
+          <SlideContainer />
         </main>
-        <aside className={"aside"}>
-          <div className={"chat-container"}>
-            <Chat />
-          </div>
+        <aside className={"home-aside"}>
+          <ChatContainer />
         </aside>
       </div>
-      <div
-        className={"footer"}
-        style={{
-          height: "23vh",
-          backgroundColor: "gray"
-        }}>
-        <div className={"footer-content"} >
-          <div className={"footer-content-left"}>
-            <div className={"footer-content-col"}>
-              <div className={"logo-container"}>Logo</div>
+      <div className={"home-footer"}>
+        <div className={"home-footer-content"} >
+          <div className={"home-footer-content-left"}>
+            <div className={"home-footer-content-col"}>
+              <LogoContainer />
             </div>
-            <div className={"footer-content-col"}>
-              <div className={"qr-container"}>QR</div>
+            <div className={"home-footer-content-col"}>
+              <QrContainer />
             </div>
-            <div className={"footer-content-col-half"}>
-              <div className={"notice-container"}>
-                <Notice />
-              </div>
+            <div className={"home-footer-content-col-half"}>
+              <NoticeContainer />
             </div>
           </div>
-          <div className={"footer-content-right"}>
+          <div className={"home-footer-content-right"}>
             <VideoContainer />
           </div>
         </div>

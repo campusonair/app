@@ -1,0 +1,65 @@
+.home-header{
+  height: 7vh;
+  padding: 10px;
+  background-color: gray;
+}
+
+.home-body{
+  height: 70vh;
+  display: flex;
+  max-width: 1800px;
+  margin: auto;
+}
+
+.home-main{
+  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-aside{
+  width: 30%;
+  display: flex;
+  align-items: center;
+}
+
+.home-footer{
+  height: 23vh;
+  background-color: gray;
+}
+
+.home-footer-content{
+  max-width: 1800px;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.home-footer-content-left{
+  background-color:gainsboro;
+  width: 70%;
+  display: flex;
+}
+.home-footer-content-right{
+  background-color:fuchsia;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 30%;
+}
+
+.home-footer-content-col{
+  width: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-footer-content-col-half{
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

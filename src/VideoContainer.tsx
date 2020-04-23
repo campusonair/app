@@ -16,7 +16,13 @@ type Props = {};
 const Content = (props: Props) => {
   return (
     <>
-      <div className={"video-container"}>
+      <div
+        className={"video-container"}
+        style={{
+          width: "65%",
+          minWidth: "280px",
+        }}
+      >
         <VideoPlayer options={videoJsOptions} />
       </div>
     </>
