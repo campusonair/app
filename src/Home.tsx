@@ -37,19 +37,21 @@ const Content = (props: Props) => {
           height: "23vh",
           backgroundColor: "gray"
         }}>
-        <div className={"footer-container"} >
-          <div
-            className={"footer-container-left"}
-            style={{
-
-            }}>
-            <div className={"logo-container"}>Logo</div>
-            <div className={"qr-container"}>QR</div>
-            <div className={"notice-container"}>
-              <Notice />
+        <div className={"footer-content"} >
+          <div className={"footer-content-left"}>
+            <div className={"footer-content-col"}>
+              <div className={"logo-container"}>Logo</div>
+            </div>
+            <div className={"footer-content-col"}>
+              <div className={"qr-container"}>QR</div>
+            </div>
+            <div className={"footer-content-col-half"}>
+              <div className={"notice-container"}>
+                <Notice />
+              </div>
             </div>
           </div>
-          <div className={"footer-container-right"}>
+          <div className={"footer-content-right"}>
             <VideoContainer />
           </div>
         </div>
