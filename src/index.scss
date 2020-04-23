@@ -41,26 +41,16 @@ html, body, #root
   right: 0;
 }
 
-// .video-container{
-//   width: 62%;
-//   position: relative;
-//   &::before {
-//     content: "";
-//     display: block;
-//     padding-top: 56.25%;
-//   }
-// }
-
-// .video-js{
-//   background-color:palegreen;
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   bottom: 0;
-//   right: 0;
-// }
-.video-js.vjs-fluid{
-  width: 19vw;
+.video-container{
+  width: 65%;
+  min-width: 280px;
+}
+.video-js .vjs-big-play-button{
+  top:0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
 }
 
 .body{
