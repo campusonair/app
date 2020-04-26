@@ -5,7 +5,7 @@ const videoJsOptions = {
   sources: [
     {
       src:
-        "https://d2xrglmfv4b1pf.cloudfront.net/hls-a/stream-a_768x432_1200k.m3u8",
+        "https://d2zihajmogu5jn.cloudfront.net/advanced-fmp4/master.m3u8",
       type: "application/x-mpegURL",
     },
   ],
