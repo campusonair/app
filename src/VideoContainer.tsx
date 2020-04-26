@@ -5,7 +5,7 @@ const videoJsOptions = {
   sources: [
     {
       src:
-        "https://ismrcqxrr6qz5j.data.mediastore.ap-northeast-1.amazonaws.com/hls-a/stream-a_720p60.m3u8",
+        "https://d2xrglmfv4b1pf.cloudfront.net/hls-a/stream-a_640x360_800k.m3u8",
       type: "application/x-mpegURL",
     },
   ],
