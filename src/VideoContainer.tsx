@@ -6,7 +6,7 @@ const videoJsOptions = {
     {
       src:
         "https://d2xrglmfv4b1pf.cloudfront.net/hls-a/stream-a_416x234_200k.m3u8",
-      type: "video/mp4",
+      type: "application/x-mpegURL",
     },
   ],
 };
