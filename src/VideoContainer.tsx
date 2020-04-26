@@ -2,7 +2,6 @@ import * as React from "react";
 import VideoPlayer from "./VideoPlayer";
 
 const videoJsOptions = {
-  autoplay: true,
   sources: [
     {
       src:
