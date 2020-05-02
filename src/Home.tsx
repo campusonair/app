@@ -1,6 +1,7 @@
 import * as React from "react";
 import "./Home.scss";
 import { IoIosThumbsUp, IoIosThumbsDown } from "react-icons/io";
+import Video from "./VideoContainer";
 
 type Props = {};
 
@@ -17,7 +18,7 @@ const Content = (props: Props) => {
   const [wsError, setWsError] = React.useState(false)
 
   React.useEffect(() => {
-    const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL as string);
+    const ws = new WebSocket("wss://ez6o8j75hg.execute-api.ap-northeast-1.amazonaws.com/v1");
     ws.onerror = (error) => {
       setWsError(true)
       console.error(error);
@@ -67,6 +68,7 @@ const Content = (props: Props) => {
       />
       <div>
         <dl>
+          {'aaa'}
           <dt>Good!</dt>
           <dd>{`+${goodCount}`}</dd>
         </dl>
@@ -76,6 +78,7 @@ const Content = (props: Props) => {
         </dl>
         <div className={'reaction-container'} ref={reactionContainer}></div>
       </div>
+      <Video />
     </> : wsError ? <p>{'WebSocket 接続エラー'}</p> : <p>{'接続中です..!'}</p>
   );
 };
