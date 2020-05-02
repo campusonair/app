@@ -1,10 +1,4 @@
 import * as React from "react";
-import VideoContainer from "./VideoContainer";
-import SlideContainer from "./SlideContainer";
-import ChatContainer from "./ChatContainer";
-import NoticeContainer from "./NoticeContainer";
-import QrContainer from "./QrContainer";
-import LogoContainer from "./LogoContainer";
 import "./Home.scss";
 import { IoIosThumbsUp, IoIosThumbsDown } from "react-icons/io";
 
