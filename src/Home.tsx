@@ -12,37 +12,45 @@ type Props = {};
 
 const Content = (props: Props) => {
 
-  const [message, setMessage] = React.useState("No Message");
-  const ws = new WebSocket(
-    "wss://bedhbwbhi7.execute-api.ap-northeast-1.amazonaws.com/v1"
-  );
-  ws.onerror = (error) => {
-    console.error(error);
-  };
-  ws.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    setMessage(data.message);
-  }
+  const [message, setMessage] = React.useState<String>("No Message");
+  const [socket, setSocket] = React.useState<WebSocket | null>(null)
+
+  React.useEffect(() => {
+    const ws = new WebSocket(
+      "wss://ez6o8j75hg.execute-api.ap-northeast-1.amazonaws.com/v1"
+    );
+    ws.onerror = (error) => {
+      console.error(error);
+    };
+    ws.onmessage = (event) => {
+      console.log(event.data)
+      // const data = JSON.parse(event.data);
+      // setMessage(data);
+    }
+    setSocket(ws)
+  }, [])
+
+
+
   return (
-    <>
+    socket ? <>
       <IoIosThumbsUp
         onClick={
-          ws.onopen = () => {
-            ws.send("thumbsUp");
+          () => {
+            socket.send("thumbsUp")
           }
         }
       />
       <IoIosThumbsDown
         onClick={
-          ws.onopen = () => {
-            ws.send("thumbsDown");
-          }
+          () => { socket.send("thumbsDown") }
+
         }
       />
       <div>
         {message}
       </div>
-    </>
+    </> : <p>{'接続中です..!'}</p>
   );
 };
 
