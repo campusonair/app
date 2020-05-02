@@ -6,16 +6,34 @@ import NoticeContainer from "./NoticeContainer";
 import QrContainer from "./QrContainer";
 import LogoContainer from "./LogoContainer";
 import "./Home.scss";
-import ThumbsUp from "./ThumbsUp";
-import ThumbsDown from "./ThumbsDown";
+import { IoIosThumbsUp, IoIosThumbsDown } from "react-icons/io";
 
 type Props = {};
 
 const Content = (props: Props) => {
+  const ws = new WebSocket(
+    "wss://bedhbwbhi7.execute-api.ap-northeast-1.amazonaws.com/v1"
+  );
+  ws.onerror = (error) => {
+    console.error(error);
+  };
+  ws.onmessage = (message) => {
+    console.log(message);
+  };
   return (
     <>
-      <ThumbsUp />
-      <ThumbsDown />
+      <IoIosThumbsUp
+        onClick={() => {
+          ws.onopen = () => {
+            ws.send("thumbsUp");
+          };
+        }}
+      />
+      <IoIosThumbsDown
+        onClick={() => {
+          console.log("thumbsDown");
+        }}
+      />
       {/* <div className={"home-header"}>
         <h1>Example World 2020 re:Public</h1>
       </div>
