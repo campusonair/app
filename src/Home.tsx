@@ -6,13 +6,17 @@ import NoticeContainer from "./NoticeContainer";
 import QrContainer from "./QrContainer";
 import LogoContainer from "./LogoContainer";
 import "./Home.scss";
+import ThumbsUp from "./ThumbsUp";
+import ThumbsDown from "./ThumbsDown";
 
 type Props = {};
 
 const Content = (props: Props) => {
   return (
     <>
-      <div className={"home-header"}>
+      <ThumbsUp />
+      <ThumbsDown />
+      {/* <div className={"home-header"}>
         <h1>Example World 2020 re:Public</h1>
       </div>
       <div className={"home-body"}>
@@ -40,7 +44,7 @@ const Content = (props: Props) => {
             <VideoContainer />
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
