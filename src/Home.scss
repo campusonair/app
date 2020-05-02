@@ -65,3 +65,30 @@
   justify-content: center;
   align-items: center;
 }
+
+.icon-animation {
+  display: block;
+  width: 10px;
+  position: absolute;
+  top: 300px;
+}
+
+.stylie {
+  animation-name: stylie-transform-keyframes;
+  animation-duration: 6000ms;
+  animation-delay: 0ms;
+  animation-fill-mode: forwards;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  transform-origin: 0 0;
+}
+
+@keyframes stylie-transform-keyframes {
+  0%     { transform:translate(0px,     0px) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(-50%, -50%); animation-timing-function: cubic-bezier(.25,.25,.75,.75);}
+  16.67% { transform:translate(20px,  -41px) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(-50%, -50%); animation-timing-function: cubic-bezier(.25,.25,.75,.75);}
+  33.33% { transform:translate(-8px,  -75px) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(-50%, -50%); animation-timing-function: cubic-bezier(.25,.25,.75,.75);}
+  50%    { transform:translate(24px, -110px) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(-50%, -50%); animation-timing-function: cubic-bezier(.25,.25,.75,.75);}
+  66.67% { transform:translate(-2px, -140px) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(-50%, -50%); animation-timing-function: cubic-bezier(.25,.25,.75,.75);}
+  83.33% { transform:translate(26px, -174px) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(-50%, -50%); animation-timing-function: cubic-bezier(.25,.25,.75,.75);}
+  100%   { transform:translate(2px,  -203px) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(-50%, -50%);}
+}
