@@ -1,86 +1,107 @@
 import * as React from "react";
+import AWS from "aws-sdk";
 import "./Home.scss";
-import { IoIosThumbsUp, IoIosThumbsDown } from "react-icons/io";
-import Video from "./VideoContainer";
+import Master from "./Master";
 
 type Props = {};
-
-const GOOD = "thumbsUp"
-const BAD = "thumbsDown"
+type Credentials = {
+  region: string,
+  accessKeyId: string,
+  secretAccessKey: string,
+  channelName: string,
+  clientId: string,
+  sessionToken: null,
+  endpoint: null,
+}
 
 const Content = (props: Props) => {
 
-  const reactionContainer = React.useRef<HTMLDivElement>(null)
+  const accessKeyId = React.useRef<HTMLInputElement>(null)
+  const secretAccessKey = React.useRef<HTMLInputElement>(null)
+  const channelName = React.useRef<HTMLInputElement>(null)
+  const clientId = React.useRef<HTMLInputElement>(null)
 
-  const [goodCount, setGood] = React.useState(0)
-  const [badCount, setBad] = React.useState(0)
-  const [socket, setSocket] = React.useState<WebSocket | null>(null)
-  const [wsError, setWsError] = React.useState(false)
+  const [credentials, setCredentials] = React.useState({
+    region: 'ap-northeast-1',
+    accessKeyId: accessKeyId.current?.value || '',
+    secretAccessKey: secretAccessKey.current?.value || '',
+    channelName: channelName.current?.value || '',
+    clientId: clientId.current?.value || '',
+    sessionToken: null,
+    endpoint: null,
+  })
 
-  React.useEffect(() => {
-    const ws = new WebSocket("wss://ez6o8j75hg.execute-api.ap-northeast-1.amazonaws.com/v1");
-    ws.onerror = (error) => {
-      setWsError(true)
-      console.error(error);
-    };
-    setSocket(ws)
-  }, [])
-
-  const appendReaction = (icon: string) => {
-    if (reactionContainer.current !== null) {
-      const marginLeft = Math.random() * 30
-      const marginBottom = Math.random() * 30
-      const delay = Math.random()
-      const reactionElement = document.createElement('div')
-      reactionElement.innerHTML = `<i style="margin-left: ${marginLeft}px; margin-bottom: ${marginBottom}px; animation-delay: ${delay}ms" class="stylie icon-animation">${icon}️</i>`
-      reactionContainer.current.append(reactionElement)
-      setTimeout(() => {
-        reactionElement.remove()
-      }, 6000)
+  const setValue = () => {
+    const config: Credentials = {
+      region: 'ap-northeast-1',
+      accessKeyId: accessKeyId.current?.value || '',
+      secretAccessKey: secretAccessKey.current?.value || '',
+      channelName: channelName.current?.value || '',
+      clientId: clientId.current?.value || '',
+      sessionToken: null,
+      endpoint: null,
     }
+    console.log(config);
+    setCredentials(config);
+    console.log(credentials);
   }
 
-  if (socket) {
-    socket.onmessage = (event) => {
-      if (event.data === GOOD) {
-        appendReaction('❤');
-        setGood(goodCount + 1);
-      } else if (event.data === BAD) {
-        appendReaction('💙');
-        setBad(badCount + 1);
-      }
-    }
+  const createSignalingChannel = async (props: Credentials) => {
+    console.log(props)
+
+    // Create KVS client
+    const kinesisVideoClient = new AWS.KinesisVideo({
+      region: props.region,
+      accessKeyId: props.accessKeyId,
+      secretAccessKey: props.secretAccessKey
+    });
+
+    // Get signaling channel ARN
+    await kinesisVideoClient.createSignalingChannel({
+      ChannelName: props.channelName,
+    }).promise();
+
+    // Get signaling channel ARN
+    const describeSignalingChannelResponse = await kinesisVideoClient.describeSignalingChannel({
+      ChannelName: props.channelName,
+    }).promise();
+
+    const channelARN = describeSignalingChannelResponse.ChannelInfo?.ChannelARN;
+    console.log('[CREATE_SIGNALING_CHANNEL] Channel ARN: ', channelARN);
   }
 
   return (
-    socket ? <>
-      <IoIosThumbsUp
-        onClick={
-          () => {
-            socket.send(GOOD)
-          }
-        }
-      />
-      <IoIosThumbsDown
-        onClick={
-          () => { socket.send(BAD) }
-        }
-      />
-      <div>
-        <dl>
-          {'aaa'}
-          <dt>Good!</dt>
-          <dd>{`+${goodCount}`}</dd>
-        </dl>
-        <dl>
-          <dt>BAD..</dt>
-          <dd>{`-${badCount}`}</dd>
-        </dl>
-        <div className={'reaction-container'} ref={reactionContainer}></div>
-      </div>
-      <Video />
-    </> : wsError ? <p>{'WebSocket 接続エラー'}</p> : <p>{'接続中です..!'}</p>
-  );
+    <>
+      <form id="form">
+        <h4>KVS Endpoint</h4>
+        <h4>AWS Credentials</h4>
+        <div className="form-group">
+          <label>Access Key ID</label>
+          <input type="text" className="form-control" id="accessKeyId" placeholder="Access key id" ref={accessKeyId} onChange={setValue} />
+        </div>
+        <div className="form-group">
+          <label>Secret Access Key</label>
+          <input type="password" className="form-control" id="secretAccessKey" placeholder="Secret access key" ref={secretAccessKey} onChange={setValue} />
+        </div>
+        <h4>Signaling Channel</h4>
+        <div className="form-group">
+          <label>Channel Name</label>
+          <input type="text" className="form-control" id="channelName" placeholder="Channel" ref={channelName} onChange={setValue} />
+        </div>
+        <div className="form-group">
+          <label>Client Id <small>(optional)</small></label>
+          <input type="text" className="form-control" id="clientId" placeholder="Client id" ref={clientId} onChange={setValue} />
+        </div>
+        <div>
+          <button id="master-button" type="button" className="btn btn-primary">Start Master</button>
+          <button id="viewer-button" type="button" className="btn btn-primary">Start Viewer</button>
+          <button id="create-channel-button" type="button" className="btn btn-primary" onClick={() => {
+            createSignalingChannel(credentials);
+          }}>Create Channel</button>
+        </div>
+      </form>
+    </>
+  )
 };
 
 export default Content;
