@@ -41,14 +41,10 @@ const Content = (props: Props) => {
       sessionToken: null,
       endpoint: null,
     }
-    console.log(config);
     setCredentials(config);
-    console.log(credentials);
   }
 
   const createSignalingChannel = async (props: Credentials) => {
-    console.log(props)
-
     // Create KVS client
     const kinesisVideoClient = new AWS.KinesisVideo({
       region: props.region,
@@ -93,11 +89,15 @@ const Content = (props: Props) => {
           <input type="text" className="form-control" id="clientId" placeholder="Client id" ref={clientId} onChange={setValue} />
         </div>
         <div>
-          <button id="master-button" type="button" className="btn btn-primary">Start Master</button>
-          <button id="viewer-button" type="button" className="btn btn-primary">Start Viewer</button>
-          <button id="create-channel-button" type="button" className="btn btn-primary" onClick={() => {
-            createSignalingChannel(credentials);
-          }}>Create Channel</button>
+          <button id="create-channel-button" type="button" className="btn btn-primary"
+            onClick={() => {
+              createSignalingChannel(credentials);
+            }}
+          >
+            Create Channel
+          </button>
+          <Master {...credentials} />
+          <button id="viewer-button" type="button" className="btn btn-primary" >Start Viewer</button>
         </div>
       </form>
     </>
