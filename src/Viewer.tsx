@@ -118,7 +118,7 @@ const Content = (props: Props) => {
     const resolution = { width: { ideal: 640 }, height: { ideal: 480 } };
     const constraints = {
       video: resolution,
-      audio: props.sendAudio,
+      audio: true,
     };
     const configuration: RTCConfiguration = {
       iceServers,
