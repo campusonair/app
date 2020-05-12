@@ -162,6 +162,7 @@ const Content = (props: Props) => {
     viewer.signalingClient.on('sdpAnswer', async answer => {
       // Add the SDP answer to the peer connection
       console.log('[VIEWER] Received SDP answer');
+      console.log(viewer.peerConnection);
       await viewer.peerConnection!.setRemoteDescription(answer);
     });
 
@@ -185,18 +186,8 @@ const Content = (props: Props) => {
         console.log('[VIEWER] Generated ICE candidate');
 
         // When trickle ICE is enabled, send the ICE candidates as they are generated.
-        if (props.useTrickleICE) {
-          console.log('[VIEWER] Sending ICE candidate');
-          viewer.signalingClient!.sendIceCandidate(candidate);
-        }
-      } else {
-        console.log('[VIEWER] All ICE candidates have been generated');
-
-        // When trickle ICE is disabled, send the offer now that all the ICE candidates have ben generated.
-        if (!props.useTrickleICE) {
-          console.log('[VIEWER] Sending SDP offer');
-          viewer.signalingClient!.sendSdpOffer(viewer.peerConnection!.localDescription!);
-        }
+        console.log('[VIEWER] Sending ICE candidate');
+        viewer.signalingClient!.sendIceCandidate(candidate);
       }
     });
 
