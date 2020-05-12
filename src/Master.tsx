@@ -17,31 +17,32 @@ type master = {
   peerConnectionByClientId: {
     [remoteClientId: string]: RTCPeerConnection
   },
-  dataChannelByClientId: {
-    [remoteClientId: string]: any
-  },
   localStream: MediaStream | null,
-  remoteStreams: [],
+  remoteStreams: [
+    {
+      getTracks: Function
+    }
+  ] | [],
   peerConnectionStatsInterval: null,
+  localView: any,
+  remoteView: any
 }
 
 const Content = (props: Props) => {
   let localView = React.useRef<HTMLVideoElement>(null)
   let remoteView = React.useRef<HTMLVideoElement>(null)
-  console.log(localView.current)
 
+  const master: master = {
+    signalingClient: null,
+    peerConnectionByClientId: {},
+    localStream: null,
+    remoteStreams: [],
+    peerConnectionStatsInterval: null,
+    localView: localView,
+    remoteView: remoteView
+  };
 
   const startMaster = async (props: any) => {
-
-    const master: master = {
-      signalingClient: null,
-      peerConnectionByClientId: {},
-      dataChannelByClientId: {},
-      localStream: null,
-      remoteStreams: [],
-      peerConnectionStatsInterval: null,
-    };
-
     // Create KVS client
     const kinesisVideoClient = new AWS.KinesisVideo({
       region: props.region,
@@ -181,10 +182,8 @@ const Content = (props: Props) => {
       );
 
       // When trickle ICE is enabled, send the answer now and then send ICE candidates as they are generated. Otherwise wait on the ICE candidates.
-      if (props.useTrickleICE) {
-        console.log('[MASTER] Sending SDP answer to client: ' + remoteClientId);
-        master.signalingClient?.sendSdpAnswer(peerConnection.localDescription!, remoteClientId);
-      }
+      console.log('[MASTER] Sending SDP answer to client: ' + remoteClientId);
+      master.signalingClient?.sendSdpAnswer(peerConnection.localDescription!, remoteClientId);
       console.log('[MASTER] Generating ICE candidates for client: ' + remoteClientId);
     });
 
@@ -208,11 +207,52 @@ const Content = (props: Props) => {
     master.signalingClient.open();
   }
 
+  const stopMaster = () => {
+
+    console.log(master)
+
+    console.log('[MASTER] Stopping master connection');
+    if (master.signalingClient) {
+      master.signalingClient.close();
+      master.signalingClient = null;
+    }
+
+    Object.keys(master.peerConnectionByClientId).forEach(clientId => {
+      master.peerConnectionByClientId[clientId].close();
+    });
+    master.peerConnectionByClientId = {};
+
+    if (master.localStream) {
+      master.localStream.getTracks().forEach(track => track.stop());
+      master.localStream = null;
+    }
+
+    master.remoteStreams.forEach(remoteStream => remoteStream.getTracks().forEach((track: any) => track.stop()));
+    master.remoteStreams = [];
+
+    if (master.peerConnectionStatsInterval) {
+      clearInterval(master.peerConnectionStatsInterval!);
+      master.peerConnectionStatsInterval = null;
+    }
+
+    if (master.localView && null !== master.localView.current.srcObject) {
+      master.localView.current.srcObject = null;
+    }
+
+    if (master.remoteView && null !== master.remoteView.current.srcObject) {
+      master.remoteView.current.srcObject = null;
+    }
+  }
+
   return (
     <>
       <button id="master-button" type="button" className="btn btn-primary" onClick={() => {
         startMaster(props);
       }}>Start Master</button>
+      <button id="stop-master-button" type="button" className="btn btn-primary" onClick={() => {
+        stopMaster();
+      }}
+      >Stop Master</button>
       <div id="master" className="d-none">
         <h2>Master</h2>
         <div className="row">
@@ -227,25 +267,6 @@ const Content = (props: Props) => {
             <div className="video-container">
               <video className="remote-view" autoPlay playsInline controls ref={remoteView} /></div>
           </div>
-        </div>
-        <div className="row datachannel">
-          <div className="col">
-            <div className="form-group">
-              <textarea className="form-control local-message"
-                placeholder="DataChannel Message" />
-            </div>
-          </div>
-          <div className="col">
-            <div className="card bg-light mb-3">
-              <pre className="remote-message card-body text-monospace preserve-whitespace"></pre>
-            </div>
-          </div>
-        </div>
-        <div>
-          <span className="send-message datachannel">
-            <button type="button" className="btn btn-primary">Send DataChannel Message</button>
-          </span>
-          <button id="stop-master-button" type="button" className="btn btn-primary">Stop Master</button>
         </div>
       </div>
     </>

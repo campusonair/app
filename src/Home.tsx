@@ -2,6 +2,7 @@ import * as React from "react";
 import AWS from "aws-sdk";
 import "./Home.scss";
 import Master from "./Master";
+import Viewer from "./Viewer";
 
 type Props = {};
 type Credentials = {
@@ -97,7 +98,7 @@ const Content = (props: Props) => {
             Create Channel
           </button>
           <Master {...credentials} />
-          <button id="viewer-button" type="button" className="btn btn-primary" >Start Viewer</button>
+          <Viewer {...credentials} />
         </div>
       </form>
     </>
