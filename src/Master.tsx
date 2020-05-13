@@ -18,19 +18,16 @@ type master = {
     [remoteClientId: string]: RTCPeerConnection
   },
   localStream: MediaStream | null,
-  remoteStreams: [
-    {
-      getTracks: Function
-    }
-  ] | [],
+  remoteStreams: MediaStream[],
   peerConnectionStatsInterval: null,
   localView: any,
-  remoteView: any
+  // remoteView: any
 }
 
 const Content = (props: Props) => {
   let localView = React.useRef<HTMLVideoElement>(null)
-  let remoteView = React.useRef<HTMLVideoElement>(null)
+  // let remoteView = React.useRef<HTMLVideoElement>(null)
+  let remoteViewList = React.useRef<HTMLDivElement>(null)
 
   const master: master = {
     signalingClient: null,
@@ -39,11 +36,13 @@ const Content = (props: Props) => {
     remoteStreams: [],
     peerConnectionStatsInterval: null,
     localView: localView,
-    remoteView: remoteView
+    // remoteView: remoteView
   };
 
   const startMaster = async (props: any) => {
+
     // Create KVS client
+    //シグナリング（中継）サーバーとの接続用オブジェクト作成
     const kinesisVideoClient = new AWS.KinesisVideo({
       region: props.region,
       accessKeyId: props.accessKeyId,
@@ -54,6 +53,7 @@ const Content = (props: Props) => {
     });
 
     // Get signaling channel ARN
+    //チャンネルARN（固有ID）取得
     const describeSignalingChannelResponse = await kinesisVideoClient
       .describeSignalingChannel({
         ChannelName: props.channelName,
@@ -64,6 +64,7 @@ const Content = (props: Props) => {
     console.log('[MASTER] Channel ARN: ', channelARN);
 
     // Get signaling channel endpoints
+    //チャンネルエンドポイント取得。Master用のエンドポイント取得。
     const getSignalingChannelEndpointResponse = await kinesisVideoClient.getSignalingChannelEndpoint({
       ChannelARN: channelARN,
       SingleMasterChannelEndpointConfiguration: {
@@ -72,7 +73,7 @@ const Content = (props: Props) => {
       },
     }).promise();
 
-
+    //websocket用のプロトコルとhttpsプロトコルのエンドポイント取得。
     const endpointsByProtocol = getSignalingChannelEndpointResponse.ResourceEndpointList?.reduce((endpoints: any, endpoint: AWS.KinesisVideo.ResourceEndpointListItem) => {
       let key: string = endpoint.Protocol || '';
       endpoints[key] = endpoint.ResourceEndpoint;
@@ -81,6 +82,7 @@ const Content = (props: Props) => {
     console.log('[MASTER] Endpoints: ', endpointsByProtocol);
 
     // Create Signaling Client
+    //マスターとしてWebsoketのエンドポイントにアクセス
     master.signalingClient = new KVSWebRTC.SignalingClient({
       channelARN,
       channelEndpoint: endpointsByProtocol.WSS,
@@ -94,7 +96,7 @@ const Content = (props: Props) => {
       systemClockOffset: kinesisVideoClient.config.systemClockOffset,
     });
 
-    // Get ICE server configuration
+    // Get ICE server configuration ICEサーバーの設定はhttpsなんだ。httpsじゃないとNAT超えができないのかな？
     const kinesisVideoSignalingChannelsClient = new AWS.KinesisVideoSignalingChannels({
       region: props.region,
       accessKeyId: props.accessKeyId,
@@ -103,13 +105,16 @@ const Content = (props: Props) => {
       endpoint: endpointsByProtocol.HTTPS,
       correctClockSkew: true,
     });
+    //ICEサーバーのレスポンスを取得
     const getIceServerConfigResponse = await kinesisVideoSignalingChannelsClient
       .getIceServerConfig({
         ChannelARN: channelARN,
       })
       .promise();
     const iceServers = [];
+    //ICEサーバーにURL追加
     iceServers.push({ urls: `stun:stun.kinesisvideo.${props.region}.amazonaws.com:443` });
+    //ICEサーバーのレスポンスの要素を配列に突っ込む
     getIceServerConfigResponse.IceServerList?.forEach(iceServer =>
       iceServers.push({
         urls: iceServer.Uris,
@@ -119,6 +124,7 @@ const Content = (props: Props) => {
     );
     console.log('[MASTER] ICE servers: ', iceServers);
 
+    // ローカルとリモートを接続するオプション（WebRTC)
     const configuration: RTCConfiguration = {
       iceServers,
       iceTransportPolicy: "relay",
@@ -163,10 +169,24 @@ const Content = (props: Props) => {
       // As remote tracks are received, add them to the remote view
       peerConnection.addEventListener('track', event => {
         console.log('[MASTER] Received remote track from client: ' + remoteClientId);
-        if (remoteView.current?.srcObject) {
-          return;
-        }
-        remoteView.current!.srcObject = event.streams[0];
+        // if (remoteView.current?.srcObject) {
+        //   return;
+        // }
+
+        master.remoteStreams = [...event.streams];
+        console.log(master.remoteStreams)
+        master.remoteStreams.forEach(stream => {
+          console.log(stream)
+          const videoElement = document.createElement('video')
+          videoElement.className = "remote-view"
+          videoElement.autoplay = true
+          videoElement.controls = true
+          videoElement.srcObject = stream
+          remoteViewList.current!.append(videoElement)
+        })
+
+        {/* <video className="remote-view" autoPlay playsInline controls ref={remoteView} /> */ }
+
       });
 
       master.localStream?.getTracks().forEach(track => peerConnection.addTrack(track, master.localStream!));
@@ -239,9 +259,9 @@ const Content = (props: Props) => {
       master.localView.current.srcObject = null;
     }
 
-    if (master.remoteView && null !== master.remoteView.current.srcObject) {
-      master.remoteView.current.srcObject = null;
-    }
+    // if (master.remoteView && null !== master.remoteView.current.srcObject) {
+    //   master.remoteView.current.srcObject = null;
+    // }
   }
 
   return (
@@ -264,8 +284,9 @@ const Content = (props: Props) => {
           </div>
           <div className="col">
             <h5>Viewer Return Channel</h5>
-            <div className="video-container">
-              <video className="remote-view" autoPlay playsInline controls ref={remoteView} /></div>
+            <div className="video-container remote-view-list" ref={remoteViewList}>
+              {/* <video className="remote-view" autoPlay playsInline controls ref={remoteView} /> */}
+            </div>
           </div>
         </div>
       </div>

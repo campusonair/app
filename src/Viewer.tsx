@@ -235,11 +235,11 @@ const Content = (props: Props) => {
     }
 
     if (viewer.localView && null !== viewer.localView.current.srcObject) {
-      viewer.localView.srcObject = null;
+      viewer.localView.current.srcObject = null;
     }
 
     if (viewer.remoteView && null !== viewer.remoteView.current.srcObject) {
-      viewer.remoteView.srcObject = null;
+      viewer.remoteView.current.srcObject = null;
     }
   }
   return (

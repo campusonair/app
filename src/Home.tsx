@@ -99,6 +99,7 @@ const Content = (props: Props) => {
           </button>
           <Master {...credentials} />
           <Viewer {...credentials} />
+          <Viewer {...credentials} />
         </div>
       </form>
     </>
