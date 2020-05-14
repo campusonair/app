@@ -5,6 +5,7 @@ import { Container } from 'react-bootstrap'
 // New - import the React Router components, and the Profile page component
 import { Router, Route, Switch } from "react-router-dom";
 import Profile from "./components/Profile";
+import Home from "./components/Home"
 import history from "./utils/history";
 
 function App() {
@@ -15,8 +16,8 @@ function App() {
         <Router history={history}>
           <Header />
           <Switch>
-            <Route path="/" exact />
-            <Route path="/profile" component={Profile} />
+            <Route path="/" exact component={Home} />
+            <Route path="/profile" exact component={Profile} />
           </Switch>
         </Router>
       </Container>
