@@ -6,7 +6,7 @@ import Video from './Video'
 type Props = {};
 
 const Content = (props: Props) => {
-  const { isAuthenticated, loginWithRedirect, logout, loading, user } = useAuth0();
+  const { isAuthenticated } = useAuth0();
 
   let HomeContent
   if (isAuthenticated) {
