@@ -1,22 +1,17 @@
 import * as React from "react";
-import { Container } from 'react-bootstrap'
+import { Container, Button } from 'react-bootstrap'
 import { useAuth0 } from "../react-auth0-spa";
-import Video from './Video'
+import { __ } from '@wordpress/i18n'
 
 type Props = {};
 
 const Content = (props: Props) => {
   const { isAuthenticated } = useAuth0();
 
-  let HomeContent
-  if (isAuthenticated) {
-    HomeContent = <Video />
-  } else {
-    HomeContent = <></>
-  }
-
   return (
-    <Container>{HomeContent}</Container>
+    <Container>
+      <Button>{__("Create a studio")}</Button>
+    </Container>
   );
 };
 
