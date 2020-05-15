@@ -5,37 +5,42 @@ import './Video.scss'
 type Props = {};
 
 const Content = (props: Props) => {
-  const videoNode = React.useRef<HTMLVideoElement>(null);
+  const videoContainer = React.useRef<HTMLVideoElement>(null);
 
-  React.useEffect(() => {
-    if (!videoNode || !videoNode.current) {
+  const setAspectRatio = () => {
+    if (!videoContainer || !videoContainer.current) {
       return
     }
 
-    // Set 16:9
-    const height = videoNode.current.clientWidth * 0.562
-    videoNode.current.style.height = `${height}px`
+    const height = videoContainer.current.clientWidth * 0.562
+    videoContainer.current.style.height = `${height}px`
+  }
+
+  React.useEffect(() => {
+    window.addEventListener('resize', setAspectRatio)
+    setAspectRatio()
 
     const videoOptions = {
-      video: true,
+      video: {
+        width: 1280,
+        height: 720
+      },
       audio: true
     }
 
-    // @ts-ignore
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia
+    navigator.mediaDevices.getUserMedia(videoOptions).then((stream) => {
+      if (videoContainer && videoContainer.current) {
+        videoContainer.current.srcObject = stream
+      }
+    }).catch((err) => {
+      console.log(err.name + ": " + err.message);
+    });
 
-    navigator.getUserMedia(videoOptions, (stream: MediaStream) => {
-        if (videoNode && videoNode.current) {
-          videoNode.current.srcObject = stream
-        }
-      }, (err: MediaStreamError) => {
-        console.log(err);
-      });
-  }, [videoNode])
+  }, [videoContainer])
 
   return (
     <div className="video-container">
-      <video ref={videoNode} autoPlay={true} width="640" height="480" />
+      <video ref={videoContainer} autoPlay={true} width="1280" height="720" />
     </div>
   );
 };
