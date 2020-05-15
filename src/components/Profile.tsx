@@ -1,12 +1,13 @@
 import React, { Fragment } from "react";
 import { Container } from 'react-bootstrap'
 import { useAuth0 } from "../react-auth0-spa";
+import Loading from './Loading'
 
 const Profile = () => {
   const { loading, user } = useAuth0();
 
   if (loading || !user) {
-    return <div>Loading...</div>;
+    return <Container><Loading /></Container>
   }
 
   return (

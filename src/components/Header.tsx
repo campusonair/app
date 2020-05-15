@@ -15,7 +15,7 @@ const NavBar = () => {
   return (
     <Navbar className="justify-content-between">
       <Navbar.Brand href="/">React-Bootstrap</Navbar.Brand>
-      {!isAuthenticated && (<Button onClick={() => loginWithRedirect({})}>Log in</Button>)}
+      {!isAuthenticated && !loading && (<Button onClick={() => loginWithRedirect({})}>Log in</Button>)}
       {userName &&
         <NavDropdown title={userName} id="basic-nav-dropdown" alignRight>
           <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
