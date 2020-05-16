@@ -8,7 +8,7 @@ const NavBar = () => {
 
   React.useEffect(() => {
     if (isAuthenticated && (!loading || user)) {
-      setUserName(user.nickname)
+      setUserName(user.name)
     }
   }, [loading, user, isAuthenticated])
 
