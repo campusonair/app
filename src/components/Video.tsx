@@ -2,7 +2,9 @@ import * as React from "react";
 
 import './Video.scss'
 
-type Props = {};
+type Props = {
+  media: Promise<MediaStream> | undefined
+};
 
 const Content = (props: Props) => {
   const videoContainer = React.useRef<HTMLVideoElement>(null);
@@ -17,18 +19,14 @@ const Content = (props: Props) => {
   }
 
   React.useEffect(() => {
+    if (!props.media || !videoContainer) {
+      return
+    }
+
     window.addEventListener('resize', setAspectRatio)
     setAspectRatio()
 
-    const videoOptions = {
-      video: {
-        width: 1280,
-        height: 720
-      },
-      audio: true
-    }
-
-    navigator.mediaDevices.getUserMedia(videoOptions).then((stream) => {
+    props.media.then((stream) => {
       if (videoContainer && videoContainer.current) {
         videoContainer.current.srcObject = stream
       }
@@ -36,10 +34,10 @@ const Content = (props: Props) => {
       console.log(err.name + ": " + err.message);
     });
 
-  }, [videoContainer])
+  }, [videoContainer, props.media])
 
   return (
-    <div className="video-container">
+    <div className="video">
       <video ref={videoContainer} autoPlay={true} width="1280" height="720" />
     </div>
   );

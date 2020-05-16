@@ -1,0 +1,34 @@
+.device-preview
+{
+  display: flex;
+  flex-wrap: wrap;
+
+  .video-container
+  {
+    width: calc(100% - 50px);
+  }
+
+  .volume-container
+  {
+    width: 50px;
+    padding: 15px 15px 42px 15px;
+    box-sizing: border-box;
+    display: flex;
+    background-color: #F5F5F5;
+    border: 1px solid #CCCCCC;
+    position: relative;
+
+    canvas
+    {
+      background-color: #FFFFFF;
+      border: 1px solid #CCCCCC;
+    }
+
+    svg
+    {
+      position: absolute;
+      bottom: 12px;
+      margin: 0 auto;
+    }
+  }
+}
