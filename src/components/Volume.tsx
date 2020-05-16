@@ -51,13 +51,11 @@ const Content = (props: Props) => {
 
           console.log(values)
 
-          const average = values / length;
-          console.log(average)
-          console.log(length)
+          const average = values / length * 10; // 1000%
 
-          canvasContext.fillRect(0, 0, 100, 300);
+          canvasContext.fillRect(0, 0, 100, 1000);
           canvasContext.fillStyle = '#00A285';
-          canvasContext.clearRect(0, 0, 100, 300 - average);
+          canvasContext.clearRect(0, 0, 100, 1000 - average);
         }
       }
     })
@@ -65,7 +63,7 @@ const Content = (props: Props) => {
   }, [props.media, canvasContainer])
 
   return (
-    <div className="volume"><canvas ref={canvasContainer} style={style} width="100" height="300"></canvas></div>
+    <div className="volume"><canvas ref={canvasContainer} style={style} width="100" height="1000"></canvas></div>
   );
 };
 
