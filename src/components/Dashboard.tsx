@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Container, Button } from 'react-bootstrap'
+import { Container, Button, Alert } from 'react-bootstrap'
 import { __ } from '@wordpress/i18n'
 import Video from './Video'
 import Volume from './Volume'
@@ -12,6 +12,8 @@ const Content = (props: Props) => {
   const volumeContainer = React.useRef<HTMLDivElement>(null);
 
   const [ media, setMedia ] = React.useState<Promise<MediaStream>>()
+  const [ allowCamera, setAllowCamera ] = React.useState<boolean>(false)
+  const [ allowMic, setAllowMic ] = React.useState<boolean>(false)
 
   const setAspectRatio = () => {
     if (!videoContainer || !videoContainer.current || !volumeContainer || !volumeContainer.current) {
@@ -43,11 +45,12 @@ const Content = (props: Props) => {
     <Container>
       <div className="dashboard">
         <div className="device-preview">
-          <div ref={videoContainer} className="video-container"><Video media={media} /></div>
-          <div ref={volumeContainer} className="volume-container"><Volume media={media} /></div>
+          <div ref={videoContainer} className="video-container"><Video media={media} allowed={setAllowCamera} /></div>
+          <div ref={volumeContainer} className="volume-container"><Volume media={media} allowed={setAllowMic} /></div>
         </div>
 
-        <p><Button variant="primary" size="lg" block>{__("Create a studio")}</Button></p>
+        {(!allowCamera || !allowMic) && <Alert variant="danger">{__('To create a studio, please allow to access camera and micriphone.')}</Alert>}
+        <p><Button variant="primary" size="lg" block disabled={!allowCamera || !allowMic}>{__("Create a studio")}</Button></p>
       </div>
     </Container>
   );

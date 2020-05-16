@@ -3,6 +3,7 @@ import { FaMicrophone } from "react-icons/fa";
 
 type Props = {
   media: Promise<MediaStream> | undefined;
+  allowed: Function;
 };
 
 const style: React.CSSProperties = {
@@ -15,12 +16,14 @@ const Content = (props: Props) => {
   const [ micColor, setMicColor ] = React.useState<string>('#555555')
 
   React.useEffect(() => {
-    if (!props.media || !canvasContainer || !canvasContainer.current) {
+    if (!props.media || !canvasContainer || !canvasContainer.current || !props.allowed) {
       return
     }
 
 
     props.media.then((stream) => {
+      props.allowed(true)
+
       if (stream.getAudioTracks().length) {
         setMicColor('#FF0000')
       }
@@ -69,7 +72,7 @@ const Content = (props: Props) => {
       }
     })
 
-  }, [props.media, canvasContainer])
+  }, [props, canvasContainer])
 
   return (
     <><canvas ref={canvasContainer} style={style} width="100" height="1000"></canvas><FaMicrophone size="20px" color={micColor} /></>

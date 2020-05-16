@@ -3,7 +3,8 @@ import * as React from "react";
 import './Video.scss'
 
 type Props = {
-  media: Promise<MediaStream> | undefined
+  media: Promise<MediaStream> | undefined;
+  allowed: Function;
 };
 
 const Content = (props: Props) => {
@@ -19,7 +20,7 @@ const Content = (props: Props) => {
   }
 
   React.useEffect(() => {
-    if (!props.media || !videoContainer) {
+    if (!props.media || !videoContainer || !props.allowed) {
       return
     }
 
@@ -27,6 +28,7 @@ const Content = (props: Props) => {
     setAspectRatio()
 
     props.media.then((stream) => {
+      props.allowed(true)
       if (videoContainer && videoContainer.current) {
         videoContainer.current.srcObject = stream
       }
@@ -34,7 +36,7 @@ const Content = (props: Props) => {
       console.log(err.name + ": " + err.message);
     });
 
-  }, [videoContainer, props.media])
+  }, [videoContainer, props])
 
   return (
     <div className="video">
