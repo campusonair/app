@@ -78,7 +78,7 @@ const Content = (props: Props) => {
   }, [props, canvasContainer])
 
   return (
-    <><canvas ref={canvasContainer} style={style} width="100" height="1000"></canvas><FaMicrophone size="20px" color={micColor} /></>
+    <><canvas ref={canvasContainer} style={style} width="100" height="1000" /><FaMicrophone size="20px" color={micColor} /></>
   );
 };
 
