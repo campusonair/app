@@ -60,7 +60,7 @@ const Content = (props: Props) => {
 
           const average = values / length * 10; // 1000%
 
-          let color = '#00A285'
+          let color = ' #58d68d'
           if (750 < average) {
             color = '#FF0000'
           }
@@ -70,6 +70,8 @@ const Content = (props: Props) => {
           canvasContext.clearRect(0, 0, 100, 1000 - average);
         }
       }
+    }).catch((err) => {
+      console.log(err.name + ": " + err.message);
     })
 
   }, [props, canvasContainer])
