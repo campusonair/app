@@ -113,6 +113,7 @@ const Content = (props: Props) => {
       .promise();
     const iceServers = [];
     //ICEサーバーにURL追加
+    console.log(`stun:stun.kinesisvideo.${props.region}.amazonaws.com:443`)
     iceServers.push({ urls: `stun:stun.kinesisvideo.${props.region}.amazonaws.com:443` });
     //ICEサーバーのレスポンスの要素を配列に突っ込む
     getIceServerConfigResponse.IceServerList?.forEach(iceServer =>
