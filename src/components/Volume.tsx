@@ -2,7 +2,7 @@ import * as React from "react";
 import { FaMicrophone } from "react-icons/fa";
 
 type Props = {
-  media: Promise<MediaStream> | undefined
+  media: Promise<MediaStream> | undefined;
 };
 
 const style: React.CSSProperties = {
