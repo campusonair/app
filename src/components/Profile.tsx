@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Container } from 'react-bootstrap'
 import { useAuth0 } from "../react-auth0-spa";
 import Loading from './Loading'
@@ -12,12 +12,10 @@ const Profile = () => {
 
   return (
     <Container>
-      <Fragment>
-        <img src={user.picture} alt="Profile" />
-        <h2>{user.name}</h2>
-        <p>{user.email}</p>
-        <code>{JSON.stringify(user, null, 2)}</code>
-      </Fragment>
+      <img src={user.picture} alt="Profile" />
+      <h2>{user.name}</h2>
+      <p>{user.email}</p>
+      <code>{JSON.stringify(user, null, 2)}</code>
     </Container>
   );
 };
