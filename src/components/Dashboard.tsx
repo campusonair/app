@@ -3,7 +3,6 @@ import { Container, Button } from 'react-bootstrap'
 import { __ } from '@wordpress/i18n'
 import Video from './Video'
 import Volume from './Volume'
-import { FaMicrophone } from "react-icons/fa";
 import './Dashboard.scss'
 
 type Props = {};
@@ -33,7 +32,8 @@ const Content = (props: Props) => {
       audio: true
     }
 
-    setMedia(navigator.mediaDevices.getUserMedia(videoOptions))
+    const userMedia = navigator.mediaDevices.getUserMedia(videoOptions)
+    setMedia(userMedia)
 
     window.addEventListener('resize', setAspectRatio)
     setAspectRatio()
@@ -41,12 +41,13 @@ const Content = (props: Props) => {
 
   return (
     <Container>
-      <div>
+      <div className="dashboard">
         <div className="device-preview">
           <div ref={videoContainer} className="video-container"><Video media={media} /></div>
-          <div ref={volumeContainer} className="volume-container"><Volume media={media} /><FaMicrophone size="20px" /></div>
+          <div ref={volumeContainer} className="volume-container"><Volume media={media} /></div>
         </div>
-        <Button>{__("Create a studio")}</Button>
+
+        <p><Button variant="primary" size="lg" block>{__("Create a studio")}</Button></p>
       </div>
     </Container>
   );

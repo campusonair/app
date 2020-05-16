@@ -1,4 +1,5 @@
 import * as React from "react";
+import { FaMicrophone } from "react-icons/fa";
 
 type Props = {
   media: Promise<MediaStream> | undefined
@@ -11,6 +12,7 @@ const style: React.CSSProperties = {
 
 const Content = (props: Props) => {
   const canvasContainer = React.useRef<HTMLCanvasElement>(null)
+  const [ micColor, setMicColor ] = React.useState<string>('#555555')
 
   React.useEffect(() => {
     if (!props.media || !canvasContainer || !canvasContainer.current) {
@@ -19,6 +21,10 @@ const Content = (props: Props) => {
 
 
     props.media.then((stream) => {
+      if (stream.getAudioTracks().length) {
+        setMicColor('#FF0000')
+      }
+
       const audioContext = new AudioContext();
       const analyser = audioContext.createAnalyser();
       const microphone = audioContext.createMediaStreamSource(stream);
@@ -49,12 +55,15 @@ const Content = (props: Props) => {
             values += (array[i]);
           }
 
-          console.log(values)
-
           const average = values / length * 10; // 1000%
 
+          let color = '#00A285'
+          if (750 < average) {
+            color = '#FF0000'
+          }
+
           canvasContext.fillRect(0, 0, 100, 1000);
-          canvasContext.fillStyle = '#00A285';
+          canvasContext.fillStyle = color;
           canvasContext.clearRect(0, 0, 100, 1000 - average);
         }
       }
@@ -63,7 +72,7 @@ const Content = (props: Props) => {
   }, [props.media, canvasContainer])
 
   return (
-    <div className="volume"><canvas ref={canvasContainer} style={style} width="100" height="1000"></canvas></div>
+    <><canvas ref={canvasContainer} style={style} width="100" height="1000"></canvas><FaMicrophone size="20px" color={micColor} /></>
   );
 };
 

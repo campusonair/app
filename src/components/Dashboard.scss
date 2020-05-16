@@ -1,7 +1,14 @@
+.dashboard
+{
+  max-width: 640px;
+  margin: 0 auto;
+}
+
 .device-preview
 {
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 1rem;
 
   .video-container
   {
