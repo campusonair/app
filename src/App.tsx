@@ -27,10 +27,10 @@ function App() {
               <>
                 <Route path="/" exact component={Dashboard} />
                 <Route path="/profile" exact component={Profile} />
-                <Route path="/studio/:studioId" exact component={Studio} />
+                <Route path="/studio/:liveId" exact component={Studio} />
               </>
             }
-            <Route path="/live/:studioId" exact component={Live} />
+            <Route path="/live/:liveId" exact component={Live} />
             {!loading && <Route path="*"><NoMatch /></Route>}
           </Switch>
         </Router>

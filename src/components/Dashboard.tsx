@@ -6,7 +6,7 @@ import Volume from './Volume'
 import './Dashboard.scss'
 import { useAuth0 } from "../react-auth0-spa";
 import Peer from 'skyway-js'
-import { getStudioId } from '../utils/api'
+import { getLiveId } from '../utils/api'
 import Config from '../config'
 
 type Props = {};
@@ -55,7 +55,7 @@ const Content = (props: Props) => {
     const id_token = claims.__raw
 
     peer.on('open', () => {
-      const studioId = getStudioId(peer.id, id_token)
+      const studioId = getLiveId(peer.id, id_token)
       window.location.href = `/studio/${studioId}`
     });
   }

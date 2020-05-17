@@ -1,4 +1,4 @@
-export const getStudioId = (peerId: string, idToken: string) => {
+export const getLiveId = (peerId: string, idToken: string) => {
 
   return peerId
 }

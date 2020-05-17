@@ -5,10 +5,10 @@ import { useParams } from "react-router-dom"
 type Props = {};
 
 const Content = (props: Props) => {
-  const { studioId } = useParams()
+  const { liveId } = useParams()
 
   return (
-  <Container>Live id is {studioId}</Container>
+  <Container>Live id is {liveId}</Container>
   );
 };
 
