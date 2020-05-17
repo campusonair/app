@@ -5,6 +5,9 @@ import Video from './Video'
 import Volume from './Volume'
 import './Dashboard.scss'
 import { useAuth0 } from "../react-auth0-spa";
+import Peer from 'skyway-js'
+
+import config from '../config.json'
 
 type Props = {};
 
@@ -45,9 +48,12 @@ const Content = (props: Props) => {
   }, [])
 
   const handleCreateStudio = async () => {
-    const claims = await auth0Client.getIdTokenClaims()
-    const id_token = claims.__raw
-    console.log(id_token)
+    const peer = new Peer({key: config.skyWayApiKey});
+
+    peer.on('open', () => {
+      window.sessionStorage.setItem('channel', peer.id)
+      window.location.href = "/studio"
+    });
   }
 
   return (
