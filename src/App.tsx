@@ -6,6 +6,10 @@ import { Router, Route, Switch } from "react-router-dom";
 import Profile from "./components/Profile";
 import Home from "./components/Home"
 import Dashboard from "./components/Dashboard"
+import Studio from "./components/Studio"
+import Live from "./components/Live"
+import NoMatch from "./components/NoMatch"
+
 import history from "./utils/history";
 
 function App() {
@@ -19,8 +23,15 @@ function App() {
           <Header />
           <Switch>
             {!isAuthenticated && !loading && <Route path="/" exact component={Home} />}
-            {isAuthenticated && !loading && <Route path="/" exact component={Dashboard} />}
-            <Route path="/profile" exact component={Profile} />
+            {isAuthenticated && !loading &&
+              <>
+                <Route path="/" exact component={Dashboard} />
+                <Route path="/profile" exact component={Profile} />
+                <Route path="/studio/:studioId" exact component={Studio} />
+              </>
+            }
+            <Route path="/live/:studioId" exact component={Live} />
+            {!loading && <Route path="*"><NoMatch /></Route>}
           </Switch>
         </Router>
       </Container>
