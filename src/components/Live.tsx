@@ -8,7 +8,7 @@ const Content = (props: Props) => {
   const { studioId } = useParams()
 
   return (
-    <Container>Live</Container>
+  <Container>Live id is {studioId}</Container>
   );
 };
 
