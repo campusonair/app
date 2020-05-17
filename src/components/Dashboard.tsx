@@ -12,7 +12,7 @@ const Content = (props: Props) => {
   const videoContainer = React.useRef<HTMLDivElement>(null);
   const volumeContainer = React.useRef<HTMLDivElement>(null);
 
-  const { getTokenSilently } = useAuth0()
+  const auth0Client = useAuth0()
 
   const [ media, setMedia ] = React.useState<Promise<MediaStream>>()
   const [ allowCamera, setAllowCamera ] = React.useState<boolean>(false)
@@ -45,8 +45,9 @@ const Content = (props: Props) => {
   }, [])
 
   const handleCreateStudio = async () => {
-    const token = await getTokenSilently();
-    console.log(token)
+    const claims = await auth0Client.getIdTokenClaims()
+    const id_token = claims.__raw
+    console.log(id_token)
   }
 
   return (
