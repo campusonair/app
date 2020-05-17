@@ -29,7 +29,8 @@ const Content = (props: Props) => {
       }
 
       // @ts-ignore
-      const audioContext = new (window.AudioContext || window.webkitAudioContext);
+      const _AudioContext = window.AudioContext || window.webkitAudioContext
+      const audioContext = new _AudioContext();
       const analyser = audioContext.createAnalyser();
       const microphone = audioContext.createMediaStreamSource(stream);
       const javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
