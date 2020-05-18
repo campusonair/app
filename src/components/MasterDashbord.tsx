@@ -14,14 +14,13 @@ const Content = (props: Props) => {
 
   const handleCreateStudio = async () => {
     const peer = new Peer({ key: Config.skyWayApiKey });
-
     const claims = await auth0Client.getIdTokenClaims()
     const id_token = claims.__raw
-
     peer.on('open', () => {
       const studioId = getLiveId(peer.id, id_token)
       window.location.href = `/studio/${studioId}`
     });
+
   }
 
   return (
