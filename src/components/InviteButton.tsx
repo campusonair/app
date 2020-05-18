@@ -11,7 +11,7 @@ const Content = (props: Props) => {
   return (
     <>
       <button onClick={() => setInviteUrl(!inviteUrl)}>{__("Invite guest")}</button>
-      {inviteUrl && <div>{window.location.origin}/studio/{liveId}</div>}
+      {inviteUrl && <div>{window.location.origin}/live/{liveId}</div>}
     </>
   );
 };
