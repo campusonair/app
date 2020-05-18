@@ -5,7 +5,7 @@ import { useAuth0 } from "./react-auth0-spa";
 import { Router, Route, Switch } from "react-router-dom";
 import Profile from "./components/Profile";
 import Home from "./components/Home"
-import Dashboard from "./components/Dashboard"
+import MasterDashbord from "./components/MasterDashbord"
 import Studio from "./components/Studio"
 import Live from "./components/Live"
 import NoMatch from "./components/NoMatch"
@@ -25,7 +25,7 @@ function App() {
             {!isAuthenticated && !loading && <Route path="/" exact component={Home} />}
             {isAuthenticated && !loading &&
               <>
-                <Route path="/" exact component={Dashboard} />
+                <Route path="/" exact component={MasterDashbord} />
                 <Route path="/profile" exact component={Profile} />
                 <Route path="/studio/:liveId" exact component={Studio} />
               </>
