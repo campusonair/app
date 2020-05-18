@@ -3,6 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 import { useParams } from "react-router-dom"
 import Video from './Video'
 import LiveCanvas from './Studio/LiveCanvas'
+import InviteButton from './InviteButton'
 
 import './Studio.scss'
 
@@ -36,9 +37,11 @@ const Content = (props: Props) => {
               <Video media={userMedia} />
             </div>
           </div>
+          <div className="invite-btn-container">
+            <InviteButton />
+          </div>
         </Col>
         <Col xs={3}>
-
         </Col>
       </Row>
     </Container>
