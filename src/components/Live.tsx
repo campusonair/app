@@ -8,7 +8,7 @@ const Content = (props: Props) => {
   const { liveId } = useParams()
 
   return (
-  <Container>Live id is {liveId}</Container>
+    <Container>Live id is {liveId}</Container>
   );
 };
 

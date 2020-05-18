@@ -19,7 +19,6 @@ const Content = (props: Props) => {
       return
     }
 
-
     props.media.then((stream) => {
       if (stream.getAudioTracks().length) {
         setMicColor('#FF0000')
