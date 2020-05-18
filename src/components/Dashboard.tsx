@@ -43,6 +43,7 @@ const Content = (props: Props) => {
     setMedia(userMedia)
 
     userMedia.then((stream) => {
+      console.log(stream)
       setIsEnabledDevice(true)
     }).catch((err) => {
       setIsEnabledDevice(false)

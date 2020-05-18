@@ -2,6 +2,8 @@
 {
   .videos-container
   {
+    margin-left: -4px;
+
     .videos
     {
       padding: 4px;
@@ -9,12 +11,17 @@
     }
     .me
     {
-      width: 100px;
-      height: 100px;
+      width: 200px;
+      height: 200px;
 
-      video
+      .video
       {
-        height: 100%;
+        background-color: #000000;
+
+        video
+        {
+          height: 100%;
+        }
       }
     }
   }

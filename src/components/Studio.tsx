@@ -36,8 +36,6 @@ const Content = (props: Props) => {
               <Video media={userMedia} />
             </div>
             <div className="guests">
-              <div className="videos">
-              </div>
             </div>
           </div>
         </Col>
