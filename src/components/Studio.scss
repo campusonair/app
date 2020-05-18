@@ -1,0 +1,21 @@
+.studio
+{
+  .videos-container
+  {
+    .videos
+    {
+      padding: 4px;
+      box-sizing: border-box;
+    }
+    .me
+    {
+      width: 100px;
+      height: 100px;
+
+      video
+      {
+        height: 100%;
+      }
+    }
+  }
+}
