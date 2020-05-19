@@ -1,9 +1,10 @@
 import * as React from "react";
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col, Button } from 'react-bootstrap'
 import { useParams } from "react-router-dom"
 import Video from './Video'
 import LiveCanvas from './Studio/LiveCanvas'
 import { joinLive } from '../utils/joinLive'
+import { __ } from '@wordpress/i18n'
 
 import './Studio.scss'
 
@@ -34,10 +35,10 @@ const Content = (props: Props) => {
             </div>
             <div className="guests videos" ref={guestVideos} />
           </div>
-          {join && <button onClick={() => {
+          <p><Button variant="primary" size="lg" block onClick={() => {
             joinLive(liveId, userMedia, guestVideos)
             setJoin(!join)
-          }}>Join Live</button>}
+          }}>{__("Join this live")}</Button></p>
         </Col>
       </Row>
     </Container>
