@@ -3,6 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 import { useParams } from "react-router-dom"
 import Video from './Video'
 import LiveCanvas from './Studio/LiveCanvas'
+import InviteButton from './InviteButton'
 import Peer from 'skyway-js'
 import Config from '../config'
 
@@ -45,7 +46,7 @@ const Content = (props: Props) => {
         newVideoContainer.appendChild(newVideo);
         //参加者の動画をセット
         newVideo.srcObject = stream;
-        //離脱時のIDとして、peerIdをセット
+        //Set data-peer-id for stop this video for later.
         newVideo.setAttribute('data-peer-id', stream.peerId);
         //ビデオタグを追加
         guestVideos.current!.append(newVideoContainer);
@@ -70,6 +71,7 @@ const Content = (props: Props) => {
               <Video media={userMedia} />
             </div>
             <div className="guests videos" ref={guestVideos} />
+            <InviteButton />
           </div>
         </Col>
         <Col xs={3}>
