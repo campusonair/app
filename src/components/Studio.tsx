@@ -22,9 +22,9 @@ const Content = (props: Props) => {
   }
 
   const userMedia = navigator.mediaDevices.getUserMedia(videoOptions)
-  const guestVideos = React.useRef<HTMLDivElement>(null);
+  const insertGuestsVideo = React.useRef<HTMLDivElement>(null);
 
-  joinLive(liveId, userMedia, guestVideos)
+  joinLive(liveId, userMedia, insertGuestsVideo)
 
   return (
     <Container className="studio">
@@ -34,15 +34,13 @@ const Content = (props: Props) => {
             <LiveCanvas></LiveCanvas>
           </div>
           <div className="controls-container">
-
           </div>
-          <div className="videos-container">
+          <div className="videos-container" ref={insertGuestsVideo}>
             <div className="me videos">
               <Video media={userMedia} />
             </div>
-            <div className="guests videos" ref={guestVideos} />
-            <InviteButton />
           </div>
+          <InviteButton />
         </Col>
         <Col xs={3}>
         </Col>

@@ -21,18 +21,22 @@ export const joinLive = (liveId: string | undefined, userMedia: Promise<MediaStr
         if (stream.peerId === peer.id) {
           return
         }
-        const newVideoContainer = document.createElement('div');
 
-        newVideoContainer.className = 'video ';
+        const newVideoContainer = document.createElement('div');
+        newVideoContainer.className = 'guests videos';
+
+        const newInnerContainer = document.createElement('div');
+        newInnerContainer.className = 'video';
 
         const newVideo = document.createElement('video');
-
-        newVideoContainer.appendChild(newVideo);
         //Set new user's stream.
         newVideo.srcObject = stream;
         //Set data-peer-id for stop this video for later.
         newVideo.setAttribute('data-peer-id', stream.peerId);
 
+        //append everthing
+        newInnerContainer.appendChild(newVideo);
+        newVideoContainer.appendChild(newInnerContainer);
         guestVideos.current!.append(newVideoContainer);
 
         await newVideo.play().catch(console.error);

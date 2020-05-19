@@ -23,20 +23,19 @@ const Content = (props: Props) => {
 
   const [join, setJoin] = React.useState<Boolean>(true);
   const userMedia = navigator.mediaDevices.getUserMedia(videoOptions)
-  const guestVideos = React.useRef<HTMLDivElement>(null);
+  const insertGuestsVideo = React.useRef<HTMLDivElement>(null);
 
   return (
     <Container>
       <Row>
         <Col xs={9}>
-          <div className="videos-container">
+          <div className="videos-container" ref={insertGuestsVideo}>
             <div className="me videos">
               <Video media={userMedia} />
             </div>
-            <div className="guests videos" ref={guestVideos} />
           </div>
           <p><Button variant="primary" size="lg" block onClick={() => {
-            joinLive(liveId, userMedia, guestVideos)
+            joinLive(liveId, userMedia, insertGuestsVideo)
             setJoin(!join)
           }}>{__("Join this live")}</Button></p>
         </Col>
