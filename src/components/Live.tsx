@@ -6,7 +6,7 @@ import LiveCanvas from './Studio/LiveCanvas'
 import { joinLive } from '../utils/joinLive'
 import { __ } from '@wordpress/i18n'
 
-import './Studio.scss'
+import './Live.scss'
 
 type Props = {};
 
