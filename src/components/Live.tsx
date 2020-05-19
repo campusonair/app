@@ -2,7 +2,6 @@ import * as React from "react";
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import { useParams } from "react-router-dom"
 import Video from './Video'
-import LiveCanvas from './Studio/LiveCanvas'
 import { joinLive } from '../utils/joinLive'
 import { __ } from '@wordpress/i18n'
 
