@@ -34,10 +34,10 @@ const Content = (props: Props) => {
               <Video media={userMedia} />
             </div>
           </div>
-          <p><Button variant="primary" size="lg" block onClick={() => {
+          {join && <p><Button variant="primary" size="lg" block onClick={() => {
             joinLive(liveId, userMedia, insertGuestsVideo)
             setJoin(!join)
-          }}>{__("Join this live")}</Button></p>
+          }}>{__("Join this live")}</Button></p>}
         </Col>
       </Row>
     </Container>
