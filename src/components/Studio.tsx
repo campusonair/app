@@ -8,6 +8,7 @@ import Peer from 'skyway-js'
 import Config from '../config'
 
 import './Studio.scss'
+import { Stream } from "stream";
 
 type Props = {};
 
@@ -21,63 +22,60 @@ const Content = (props: Props) => {
     audio: true
   }
 
+  const [remoteStream, setRemoteStream] = React.useState<MediaStream | null>(null)
+  const [inputValue, setInputValue] = React.useState<string | undefined>('')
+
+  const input = React.useRef<HTMLInputElement>(null);
+
   const userMedia = navigator.mediaDevices.getUserMedia(videoOptions)
-  const localStream = navigator.mediaDevices
-    .getUserMedia({
-      audio: true,
-      video: true,
-    })
-    .catch(console.error);
 
-  const remoteVideos = React.useRef<HTMLDivElement>(null);
+  const enterLive = (localStream: MediaStream) => {
 
-  const peer = new Peer({ key: Config.skyWayApiKey });
 
-  const stream = (peer: Peer, roomId: string, localStream: MediaStream) => {
-
-    // Note that you need to ensure the peer has connected to signaling server
-    // before using methods of peer instance.
-    if (!peer.open) {
-      return;
+    const setEventListener = (mediaConnection: any) => {
+      mediaConnection.on('stream', (stream: any) => {
+        console.log(stream)
+        setRemoteStream(stream)
+      });
     }
 
-    const room = peer.joinRoom(roomId, {
-      mode: 'mesh', //'sfu' or 'mesh'
-      stream: localStream,
-    });
+    const peer = new Peer({ key: Config.skyWayApiKey, debug: 3 })
 
-    // Render remote stream for new peer join in the room
-    room.on('stream', async stream => {
-      const newVideo = document.createElement('video');
-      newVideo.srcObject = stream;
-      // mark peerId to find it later at peerLeave event
-      newVideo.setAttribute('data-peer-id', stream.peerId);
-      remoteVideos.append(newVideo);
-      await newVideo.play().catch(console.error);
-    });
+    peer.on('open', () => {
+      console.log(peer.id)
+      console.log(inputValue)
 
+      if (!inputValue) {
+        return
+      }
 
-    // for closing room members
-    room.on('peerLeave', peerId => {
-      const remoteVideo = remoteVideos.querySelector(
-        `[data-peer-id=${peerId}]`
-      );
-      remoteVideo.srcObject.getTracks().forEach(track => track.stop());
-      remoteVideo.srcObject = null;
-      remoteVideo.remove();
-    });
+      const mediaConnection = peer.call(inputValue, localStream);
 
-    // for closing myself
-    room.once('close', () => {
-      Array.from(remoteVideos.children).forEach(remoteVideo => {
-        remoteVideo.srcObject.getTracks().forEach(track => track.stop());
-        remoteVideo.srcObject = null;
-        remoteVideo.remove();
+      setEventListener(mediaConnection);
+      peer.on('call', mediaConnection => {
+        mediaConnection.answer(localStream);
+        setEventListener(mediaConnection);
       });
-    });
 
-    // leaveTrigger.addEventListener('click', () => room.close(), { once: true });
+      console.log(remoteStream)
+
+      // const room = peer.joinRoom(liveId, {
+      //   mode: 'mesh', //'sfu' or 'mesh'
+      //   stream: localStream,
+      // });
+
+      // room.on('stream', async stream => {
+      //   remoteStream?.push(stream)
+      //   console.log(remoteStream)
+      //   setRemoteStream(remoteStream)
+      // });
+
+    });
   }
+
+  userMedia.then(localStream => {
+    enterLive(localStream)
+  }).catch(error => console.log(error))
 
   return (
     <Container className="studio">
@@ -97,9 +95,16 @@ const Content = (props: Props) => {
           <div className="invite-btn-container">
             <InviteButton />
           </div>
+          <input type='text' onClick={() => { setInputValue(input.current?.value) }} ref={input} />
+          {console.log(remoteStream)}
+          <video ref={video => {
+            if (undefined !== video && null !== video) {
+              video!.srcObject = remoteStream
+            }
+          }} />
         </Col>
         <Col xs={3}>
-          <div ref={remoteVideos} />
+
         </Col>
       </Row>
     </Container>
