@@ -91,6 +91,8 @@ const Content = (props: Props) => {
             <div className="me videos">
               <Video media={userMedia} />
             </div>
+            <div className="guests">
+            </div>
           </div>
           <div className="invite-btn-container">
             <InviteButton />

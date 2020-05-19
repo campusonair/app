@@ -8,9 +8,13 @@ type Props = {};
 const Content = (props: Props) => {
   const { liveId } = useParams()
   return (
+<<<<<<< HEAD
     <Container>
       <ViewerDashbord />
     </Container>
+=======
+    <Container>Live id is {liveId}</Container>
+>>>>>>> master
   );
 };
 export default Content;
