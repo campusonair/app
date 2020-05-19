@@ -1,20 +1,46 @@
 import * as React from "react";
-import { Container } from 'react-bootstrap'
+import { Container, Row, Col, Button } from 'react-bootstrap'
 import { useParams } from "react-router-dom"
-import ViewerDashbord from './ViewerDashbord'
+import Video from './Video'
+import { joinLive } from '../utils/joinLive'
+import { __ } from '@wordpress/i18n'
+
+import './Live.scss'
 
 type Props = {};
 
 const Content = (props: Props) => {
   const { liveId } = useParams()
+
+  const videoOptions = {
+    video: {
+      width: 1280,
+      height: 720
+    },
+    audio: true
+  }
+
+  const [join, setJoin] = React.useState<Boolean>(true);
+  const userMedia = navigator.mediaDevices.getUserMedia(videoOptions)
+  const insertGuestsVideo = React.useRef<HTMLDivElement>(null);
+
   return (
-<<<<<<< HEAD
     <Container>
-      <ViewerDashbord />
+      <Row>
+        <Col xs={9}>
+          <div className="videos-container" ref={insertGuestsVideo}>
+            <div className="me videos">
+              <Video media={userMedia} />
+            </div>
+          </div>
+          {join && <p><Button variant="primary" size="lg" block onClick={() => {
+            joinLive(liveId, userMedia, insertGuestsVideo)
+            setJoin(!join)
+          }}>{__("Join this live")}</Button></p>}
+        </Col>
+      </Row>
     </Container>
-=======
-    <Container>Live id is {liveId}</Container>
->>>>>>> master
   );
 };
+
 export default Content;

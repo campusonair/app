@@ -28,6 +28,7 @@ function App() {
                 <Route path="/" exact component={MasterDashbord} />
                 <Route path="/profile" exact component={Profile} />
                 <Route path="/studio/:liveId" exact component={Studio} />
+                <Route path="/live/:liveId" exact component={Live} />
               </>
             }
             <Route path="/live/:liveId" exact component={Live} />
