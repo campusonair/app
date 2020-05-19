@@ -21,41 +21,49 @@ const Content = (props: Props) => {
     audio: true
   }
 
+  const [join, setJoin] = React.useState<Boolean>(true);
   const userMedia = navigator.mediaDevices.getUserMedia(videoOptions)
   const guestVideos = React.useRef<HTMLDivElement>(null);
-  const peer = new Peer({ key: Config.skyWayApiKey });
 
-  // userMedia.then(localStream => {
+  const joinLive = (userMedia: Promise<MediaStream>, guestVideos: React.RefObject<HTMLDivElement>
+  ) => {
 
-  //   peer.on('open', () => {
+    const peer = new Peer({ key: Config.skyWayApiKey });
 
-  //     const room = peer.joinRoom(liveId!, {
-  //       mode: 'sfu',
-  //       stream: localStream,
-  //     });
+    userMedia.then(localStream => {
 
-  //     //参加者が追加されると呼び出し
-  //     room.on('stream', async stream => {
+      peer.on('open', () => {
 
-  //       if (stream.peerId === peer.id) {
-  //         return
-  //       }
-  //       const newVideoContainer = document.createElement('div');
-  //       newVideoContainer.className = 'video ';
-  //       // //ビデオタグを作成
-  //       const newVideo = document.createElement('video');
-  //       newVideoContainer.appendChild(newVideo);
-  //       //参加者の動画をセット
-  //       newVideo.srcObject = stream;
-  //       //離脱時のIDとして、peerIdをセット
-  //       newVideo.setAttribute('data-peer-id', stream.peerId);
-  //       //ビデオタグを追加
-  //       guestVideos.current!.append(newVideoContainer);
-  //       //再生開始
-  //       await newVideo.play().catch(console.error);
-  //     });
-  //   })
-  // })
+        const room = peer.joinRoom(liveId!, {
+          mode: 'sfu',
+          stream: localStream,
+        });
+
+        //Call when new user entered.
+        room.on('stream', async stream => {
+
+          if (stream.peerId === peer.id) {
+            return
+          }
+          const newVideoContainer = document.createElement('div');
+
+          newVideoContainer.className = 'video ';
+
+          const newVideo = document.createElement('video');
+
+          newVideoContainer.appendChild(newVideo);
+          //Set new user's stream.
+          newVideo.srcObject = stream;
+          //Set data-peer-id for stop this video for later.
+          newVideo.setAttribute('data-peer-id', stream.peerId);
+
+          guestVideos.current!.append(newVideoContainer);
+
+          await newVideo.play().catch(console.error);
+        });
+      })
+    })
+  }
 
   return (
     <Container>
@@ -64,12 +72,13 @@ const Content = (props: Props) => {
           <div className="videos-container">
             <div className="me videos">
               <Video media={userMedia} />
-              <div>hello</div>
             </div>
             <div className="guests videos" ref={guestVideos} />
           </div>
-        </Col>
-        <Col xs={3}>
+          {join && <button onClick={() => {
+            joinLive(userMedia, guestVideos)
+            setJoin(!join)
+          }}>Join Live</button>}
         </Col>
       </Row>
     </Container>
