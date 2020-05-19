@@ -4,21 +4,18 @@ import { __ } from '@wordpress/i18n'
 import Video from './Video'
 import Volume from './Volume'
 import './Dashboard.scss'
-import { useAuth0 } from "../react-auth0-spa";
-import Peer from 'skyway-js'
-import { getLiveId } from '../utils/api'
-import Config from '../config'
 
-type Props = {};
+type Props = {
+  buttonLabel: any,
+  handleCreateStudio: () => Promise<void>
+};
 
 const Content = (props: Props) => {
   const videoContainer = React.useRef<HTMLDivElement>(null);
   const volumeContainer = React.useRef<HTMLDivElement>(null);
 
-  const auth0Client = useAuth0()
-
-  const [ media, setMedia ] = React.useState<Promise<MediaStream>>()
-  const [ isEnabledDevice, setIsEnabledDevice ] = React.useState<boolean>(false)
+  const [media, setMedia] = React.useState<Promise<MediaStream>>()
+  const [isEnabledDevice, setIsEnabledDevice] = React.useState<boolean>(false)
 
   const setAspectRatio = () => {
     if (!videoContainer || !videoContainer.current || !volumeContainer || !volumeContainer.current) {
@@ -53,18 +50,6 @@ const Content = (props: Props) => {
     setAspectRatio()
   }, [])
 
-  const handleCreateStudio = async () => {
-    const peer = new Peer({key: Config.skyWayApiKey});
-
-    const claims = await auth0Client.getIdTokenClaims()
-    const id_token = claims.__raw
-
-    peer.on('open', () => {
-      const studioId = getLiveId(peer.id, id_token)
-      window.location.href = `/studio/${studioId}`
-    });
-  }
-
   return (
     <Container>
       <div className="dashboard">
@@ -74,7 +59,7 @@ const Content = (props: Props) => {
           <div ref={volumeContainer} className="volume-container"><Volume media={media} /></div>
         </div>
 
-        <p><Button variant="primary" size="lg" block disabled={!isEnabledDevice} onClick={handleCreateStudio}>{__("Create a studio")}</Button></p>
+        <p><Button variant="primary" size="lg" block disabled={!isEnabledDevice} onClick={props.handleCreateStudio}>{props.buttonLabel}</Button></p>
       </div>
     </Container>
   );

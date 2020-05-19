@@ -16,4 +16,5 @@ const Content = (props: Props) => {
     </>
   );
 };
+
 export default Content;
