@@ -18,13 +18,13 @@ const Content = (props: Props) => {
   }, [props.media])
 
   return (
-    <>
+    <div className={"guests videos"}>
     {
       guestMedias.map((stream)=>{
         return <Guest media={stream} key={stream.id}/>
       })
     }
-    </>
+    </div>
   )
 }
 

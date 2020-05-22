@@ -1,4 +1,5 @@
 import * as React from "react";
+import './Guest.scss'
 
 type Props = {
   media:MediaStream
@@ -16,9 +17,9 @@ const Content = (props: Props) => {
   }, [guestVideo, props])
 
   return (
-    <>
+    <div className={"guest video"}>
       <video ref={guestVideo} autoPlay={true}/>
-    </>
+    </div>
   );
 };
 export default Content;
