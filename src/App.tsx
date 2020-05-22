@@ -8,6 +8,7 @@ import Home from "./components/Home"
 import MasterDashbord from "./components/MasterDashbord"
 import Studio from "./components/Studio"
 import Live from "./components/Live/Live"
+import ShareScreen from "./components/Live/ShareScreen"
 import NoMatch from "./components/NoMatch"
 
 import history from "./utils/history";
@@ -31,6 +32,7 @@ function App() {
               </>
             }
             <Route path="/live" exact component={Live} />
+            <Route path="/share" exact component={ShareScreen} />
             {!loading && <Route path="*"><NoMatch /></Route>}
           </Switch>
         </Router>
