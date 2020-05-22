@@ -1,7 +1,7 @@
 import * as React from "react";
 
 type Props = {
-  stream:MediaStream
+  media:MediaStream
 };
 
 const Content = (props: Props) => {
@@ -9,19 +9,15 @@ const Content = (props: Props) => {
   const guestVideo = React.useRef<HTMLVideoElement>(null)
 
   React.useEffect(() => {
-    if(!guestVideo || !guestVideo.current || !props.stream){
+    if(!guestVideo || !guestVideo.current || !props.media){
       return
     }
-    guestVideo.current.srcObject = props.stream
-    console.log(guestVideo)
-  }, [guestVideo, props.stream])
+    guestVideo.current.srcObject = props.media
+  }, [guestVideo, props])
 
   return (
     <>
-    {
-       console.log(guestVideo)
-    }
-     <video ref={guestVideo} autoPlay={true}/>
+      <video ref={guestVideo} autoPlay={true}/>
     </>
   );
 };

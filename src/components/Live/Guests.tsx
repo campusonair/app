@@ -13,20 +13,15 @@ const Content = (props: Props) => {
     if (!props.media) {
       return
     }
-    guestMedias.push(props.media)
-    setGuestMedias(guestMedias)
+    setGuestMedias([...guestMedias,props.media])
 
   }, [props.media])
 
   return (
     <>
     {
-      console.log(guestMedias.length)
-    }
-    {
-      (guestMedias && guestMedias.length >= 1 ) && guestMedias.map((stream)=>{
-        console.log(stream)
-        return <Guest stream={stream} key={stream.id}/>
+      guestMedias.map((stream)=>{
+        return <Guest media={stream} key={stream.id}/>
       })
     }
     </>
