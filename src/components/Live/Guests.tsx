@@ -1,21 +1,34 @@
 import * as React from "react";
+import Guest from './Guest'
 
-type Props = {}
-console.log("aaaaaaaaaaaaaaaaaa")
+type Props = {
+  media: MediaStream | null
+}
+
 const Content = (props: Props) => {
-  console.log("bbbbbbbbbbbbbbbb")
 
-  const container = React.useRef<HTMLDivElement>(null)
+  const [guestMedias, setGuestMedias] = React.useState<Array<MediaStream>>([])
+
   React.useEffect(() => {
-    if (!container || !container.current) {
+    if (!props.media) {
       return
     }
-    console.log("cccccccccccccccccccccc")
-  }, [container])
+    guestMedias.push(props.media)
+    setGuestMedias(guestMedias)
+
+  }, [props.media])
 
   return (
     <>
-      <div ref={container}>Hello</div>
+    {
+      console.log(guestMedias.length)
+    }
+    {
+      (guestMedias && guestMedias.length >= 1 ) && guestMedias.map((stream)=>{
+        console.log(stream)
+        return <Guest stream={stream} key={stream.id}/>
+      })
+    }
     </>
   )
 }

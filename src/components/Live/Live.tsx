@@ -3,7 +3,7 @@ import { Container } from 'react-bootstrap'
 import { useParams } from "react-router-dom"
 import Video from '../Video'
 import { __ } from '@wordpress/i18n'
-import Guest from './Guest'
+import Guests from './Guests'
 import Peer from 'skyway-js'
 import Config from '../../config'
 import './Live.scss'
@@ -13,7 +13,7 @@ type Props = {};
 const Content = (props: Props) => {
   // const { liveId } = useParams()
   const liveId  = 'devRoom'
-  const [stream, setStream] = React.useState<MediaStream | null>(null)
+  const [guestMedia, setGuestMedia] = React.useState<MediaStream|null>(null)
 
   React.useEffect(() => {
     const peer = new Peer({ key: Config.skyWayApiKey });
@@ -29,14 +29,14 @@ const Content = (props: Props) => {
       }
       const userMedia = navigator.mediaDevices.getUserMedia(videoOptions)
 
-      userMedia.then((stream) => {
+      userMedia.then((localStream) => {
         const room = peer.joinRoom(liveId!, {
           mode: 'sfu',
-          stream: stream,
+          stream: localStream,
         });
 
         room.on('stream', async stream => {
-          setStream(stream)
+          setGuestMedia(stream)
         });
       })
     })
@@ -46,7 +46,7 @@ const Content = (props: Props) => {
   return (
     <Container>
      <div>Hello</div>
-     <Guest stream={stream}/>
+     <Guests media={guestMedia}/>
     </Container>
   );
 };

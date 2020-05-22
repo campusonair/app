@@ -1,7 +1,7 @@
 import * as React from "react";
 
 type Props = {
-  stream:MediaStream | null
+  stream:MediaStream
 };
 
 const Content = (props: Props) => {
@@ -13,10 +13,14 @@ const Content = (props: Props) => {
       return
     }
     guestVideo.current.srcObject = props.stream
+    console.log(guestVideo)
   }, [guestVideo, props.stream])
 
   return (
     <>
+    {
+       console.log(guestVideo)
+    }
      <video ref={guestVideo} autoPlay={true}/>
     </>
   );
