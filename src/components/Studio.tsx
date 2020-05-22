@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom"
 import Video from './Video'
 import LiveCanvas from './Studio/LiveCanvas'
 import InviteButton from './InviteButton'
-import { joinLive } from '../utils/joinLive'
 
 import './Studio.scss'
 
@@ -23,8 +22,6 @@ const Content = (props: Props) => {
 
   const userMedia = navigator.mediaDevices.getUserMedia(videoOptions)
   const insertGuestsVideo = React.useRef<HTMLDivElement>(null);
-
-  joinLive(liveId, userMedia, insertGuestsVideo)
 
   return (
     <Container className="studio">
