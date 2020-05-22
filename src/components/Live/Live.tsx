@@ -15,6 +15,7 @@ const Content = (props: Props) => {
   // const { liveId } = useParams()
   const liveId  = 'devRoom'
   const [guestMedia, setGuestMedia] = React.useState<MediaStream|null>(null)
+  const [leaveId, setLeaveId] = React.useState<string|null>(null)
 
   React.useEffect(() => {
     const peer = new Peer({ key: Config.skyWayApiKey });
@@ -37,9 +38,13 @@ const Content = (props: Props) => {
         });
 
         room.on('stream', async stream => {
-          console.log(stream)
           setGuestMedia(stream)
         });
+
+        room.on('peerLeave', peerId => {
+          setLeaveId(peerId)
+        });
+
       })
     })
 
@@ -48,7 +53,7 @@ const Content = (props: Props) => {
   return (
     <Container>
      <div>Hello</div>
-     <Guests media={guestMedia}/>
+     <Guests media={guestMedia} leave={leaveId}/>
     </Container>
   );
 };

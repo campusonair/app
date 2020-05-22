@@ -2,7 +2,8 @@ import * as React from "react";
 import Guest from './Guest'
 
 type Props = {
-  media: MediaStream | null
+  media: MediaStream | null,
+  leave: string | null
 }
 
 const Content = (props: Props) => {
@@ -14,16 +15,25 @@ const Content = (props: Props) => {
       return
     }
     setGuestMedias([...guestMedias,props.media])
-
   }, [props.media])
+
+  React.useEffect(() => {
+    if (!props.leave || !guestMedias) {
+      return
+    }
+    let leaveIdRemoved = guestMedias.filter((media:any)=>{
+      return media.peerId !== props.leave
+    })
+    setGuestMedias(leaveIdRemoved)
+  }, [props.leave])
 
   return (
     <div className={"guests videos"}>
-    {
-      guestMedias.map((stream)=>{
-        return <Guest media={stream} key={stream.id}/>
-      })
-    }
+      {
+        guestMedias.map((stream)=>{
+          return <Guest media={stream} key={stream.id}/>
+        })
+      }
     </div>
   )
 }
