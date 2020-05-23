@@ -15,7 +15,7 @@ const Content = (props: Props) => {
       return
     }
     setGuestMedias([...guestMedias,props.media])
-  }, [props.media])
+  }, [props.media,guestMedias])
 
   React.useEffect(() => {
     if (!props.leave || !guestMedias) {
@@ -25,7 +25,7 @@ const Content = (props: Props) => {
       return media.peerId !== props.leave
     })
     setGuestMedias(leaveIdRemoved)
-  }, [props.leave])
+  }, [props.leave,guestMedias])
 
   return (
     <div className={"guests videos"}>

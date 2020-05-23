@@ -1,10 +1,6 @@
 import * as React from "react";
 import { Container } from 'react-bootstrap'
-import { useParams } from "react-router-dom"
-import Video from '../Video'
-import { __ } from '@wordpress/i18n'
 import Guests from './Guests'
-import Guest from './Guest'
 import Peer from 'skyway-js'
 import Config from '../../config'
 import './Live.scss'
