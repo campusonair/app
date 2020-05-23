@@ -52,7 +52,7 @@ const Content = (props: Props) => {
 
   return (
     <Container>
-     <div>Hello</div>
+     <div>This is the example of ShareScreen by navigator.mediaDevices.getDisplayMedia. <br/> This demo only works with https, or you can using http with chrome.</div>
      <Guests media={guestMedia} leave={leaveId}/>
     </Container>
   );
