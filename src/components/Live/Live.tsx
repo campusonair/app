@@ -52,7 +52,7 @@ const Content = (props: Props) => {
 
   return (
     <Container>
-     <div>Hello</div>
+     <div>This is the example of Room VideoChat by skyway.</div>
      <Guests media={guestMedia} leave={leaveId}/>
     </Container>
   );
