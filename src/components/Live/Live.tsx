@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Container,Row,Col } from 'react-bootstrap'
 import Guests from './Guests'
+import Video from './../Video'
 import Peer from 'skyway-js'
 import Config from '../../config'
 import './Live.scss'
@@ -11,6 +12,7 @@ const Content = (props: Props) => {
   // const { liveId } = useParams()
   const liveId  = 'devRoom'
   const [guestMedia, setGuestMedia] = React.useState<MediaStream|null>(null)
+  const [ownerMedia, setOwnerMedia] = React.useState<Promise<MediaStream>>()
   const [leaveId, setLeaveId] = React.useState<string|null>(null)
 
   React.useEffect(() => {
@@ -26,6 +28,7 @@ const Content = (props: Props) => {
         audio: true
       }
       const userMedia = navigator.mediaDevices.getUserMedia(videoOptions)
+      setOwnerMedia(userMedia)
 
       userMedia.then((localStream) => {
         const room = peer.joinRoom(liveId!, {
@@ -34,7 +37,9 @@ const Content = (props: Props) => {
         });
 
         room.on('stream', async stream => {
-          setGuestMedia(stream)
+          if(peer.id !== stream.peerId){
+            setGuestMedia(stream)
+          }
         });
 
         room.on('peerLeave', peerId => {
@@ -60,12 +65,10 @@ const Content = (props: Props) => {
             <button>Scene</button>
           </div>
           <div className={"videos"}>
-            <div className={"video"}>My Video</div>
-            <div className={"videos"}>
-              <div className={"video"}>Guests Videos</div>
-            <div className={"video"}>Guests Videos</div>
-            <div className={"video"}>Guests Videos</div>
-          </div>
+            <div className={"me"}>
+              <Video media={ownerMedia} />
+            </div>
+            <Guests media={guestMedia} leave={leaveId}/>
             <button>+</button>
           </div>
         </Col>
@@ -73,8 +76,6 @@ const Content = (props: Props) => {
           <div className={"sidebar"}>Sidebar</div>
         </Col>
       </Row>
-     {/* <div>This is the example of Room VideoChat by skyway.</div>
-     <Guests media={guestMedia} leave={leaveId}/> */}
     </Container>
     </div>
   );

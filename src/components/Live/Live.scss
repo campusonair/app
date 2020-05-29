@@ -31,8 +31,12 @@
   }
   .videos{
     display: flex;
+    .me{
+      max-height: 100px;
+    }
     .video{
       width: 180px;
+      min-width: 180px;
       height: auto;
       position: relative;
       display: flex;
