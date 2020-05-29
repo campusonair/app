@@ -1,6 +1,50 @@
-.videos-container{
-  margin-bottom: 1rem;
+.live-container{
+  height: 93vh;
+  padding: 0 100px;
+  background-color: #F5F5F5;
+  .canvas, .sidebar,.scene button, .video{
+    background-color: lightgrey;
+    border: 1px solid gray;
+  }
+  .canvas{
+    width: 80%;
+    height: auto;
+    position: relative;
+    display: flex;
+    margin: auto;
+    margin-top: 15px;
+    &::before {
+      content: "";
+      display: block;
+      padding-top: 56.25%;
+    }
+  }
+  .scene{
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    button{
+      margin: 10px;
+      padding: 9px 10px;
+    }
+  }
   .videos{
-    margin: 1rem 0;
+    display: flex;
+    .video{
+      width: 180px;
+      height: auto;
+      position: relative;
+      display: flex;
+      margin: 0 10px;
+      &::before {
+        content: "";
+        display: block;
+        padding-top: 56.25%;
+      }
+    }
+  }
+  .sidebar{
+    height: 93vh;
   }
 }

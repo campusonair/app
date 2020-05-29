@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Container } from 'react-bootstrap'
+import { Container,Row,Col } from 'react-bootstrap'
 import Guests from './Guests'
 import Peer from 'skyway-js'
 import Config from '../../config'
@@ -47,10 +47,36 @@ const Content = (props: Props) => {
   }, [])
 
   return (
-    <Container>
-     <div>This is the example of Room VideoChat by skyway.</div>
-     <Guests media={guestMedia} leave={leaveId}/>
+    <div className={"live-container"}>
+    <Container fluid>
+      <Row>
+        <Col xs={9}>
+          <div className={"canvas"}>
+            <div>canvas</div>
+          </div>
+          <div className={"scene"}>
+            <button>Scene</button>
+            <button>Scene</button>
+            <button>Scene</button>
+          </div>
+          <div className={"videos"}>
+            <div className={"video"}>My Video</div>
+            <div className={"videos"}>
+              <div className={"video"}>Guests Videos</div>
+            <div className={"video"}>Guests Videos</div>
+            <div className={"video"}>Guests Videos</div>
+          </div>
+            <button>+</button>
+          </div>
+        </Col>
+        <Col xs={3}>
+          <div className={"sidebar"}>Sidebar</div>
+        </Col>
+      </Row>
+     {/* <div>This is the example of Room VideoChat by skyway.</div>
+     <Guests media={guestMedia} leave={leaveId}/> */}
     </Container>
+    </div>
   );
 };
 
