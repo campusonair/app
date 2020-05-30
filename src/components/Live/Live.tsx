@@ -69,7 +69,7 @@ const Content = (props: Props) => {
               <Video media={ownerMedia} />
             </div>
             <Guests media={guestMedia} leave={leaveId}/>
-            <Button>+</Button>
+            <Button variant="secondary">+</Button>
           </div>
         </Col>
         <Col xs={3}>
