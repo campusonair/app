@@ -14,25 +14,64 @@ const Content = (props: Props) => {
   const [guestMedia, setGuestMedia] = React.useState<MediaStream|null>(null)
   const [ownerMedia, setOwnerMedia] = React.useState<MediaStream|null>(null)
   const [leaveId, setLeaveId] = React.useState<string|null>(null)
-  const [canvasMedias, setCanvasMedias] = React.useState<Array<MediaStream>>([])
+  const [canvasMedias, setCanvasMedias] = React.useState<Array<HTMLVideoElement>>([])
 
-  const onSetCanvasMedia = (video: MediaStream | null) => {
+  const video = React.useRef<HTMLVideoElement>(null);
+  const canvas = React.useRef<HTMLCanvasElement>(null);
+
+  const onSetCanvasMedia = (video: HTMLVideoElement | null) => {
     if(!video || canvasMedias.includes(video)){
       return
     }
-    setCanvasMedias([...canvasMedias,video])
+    canvasMedias.push(video)
+    setCanvasMedias(canvasMedias)
   };
 
-  const onRemoveCanvasMedia =(video: MediaStream | null)=> {
-
+  const onRemoveCanvasMedia =(video: HTMLVideoElement | null)=> {
     if(!video || !canvasMedias.includes(video)){
       return
     }
-    let leaveIdRemoved = canvasMedias.filter((media:any)=>{
-      return media !== video
-    })
-    setCanvasMedias(leaveIdRemoved)
+    canvasMedias.forEach((item, index) => {
+      if(item === video) {
+        canvasMedias.splice(index,1)
+      }
+    });
+    setCanvasMedias(canvasMedias)
+    const canvasContext = canvas!.current!.getContext("2d", { desynchronized: true });
+    canvasContext!.clearRect( 0, 0, 100, 100)
   }
+
+  React.useEffect(() => {
+
+    if (!canvas.current) {
+      return;
+    }
+    const canvasContext = canvas.current.getContext("2d", { desynchronized: true });
+    draw(canvasMedias!,canvasContext);
+
+  }, []);
+
+
+  const draw = (
+    videos: Array<HTMLVideoElement>,
+    canvasContext:CanvasRenderingContext2D | null
+  ) => {
+
+    if (!videos || !canvasContext){
+      return false;
+    }
+
+    videos.forEach((video)=>{
+      canvasContext!.drawImage(video, 0, 0, 100, 100);
+    })
+
+    requestAnimationFrame(()=>{
+      draw(videos,canvasContext)
+    })
+  };
+
+
+
 
   React.useEffect(() => {
     const peer = new Peer({ key: Config.skyWayApiKey });
@@ -77,13 +116,7 @@ const Content = (props: Props) => {
     <Container fluid>
       <Row>
         <Col xs={9}>
-          <div className={"canvas"}>
-            {
-              canvasMedias.map((stream)=>{
-                return <Guest media={stream} key={stream.id} onSetCanvasMedia={onSetCanvasMedia} onRemoveCanvasMedia={onRemoveCanvasMedia}/>
-              })
-            }
-          </div>
+          <canvas ref={canvas} className={"canvas"}/>
           <div className={"scene"}>
             <button>Scene</button>
             <button>Scene</button>

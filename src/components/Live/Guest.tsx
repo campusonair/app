@@ -4,8 +4,8 @@ import './Guest.scss'
 
 type Props = {
   media: MediaStream| null,
-  onSetCanvasMedia:(video: MediaStream | null ) => void,
-  onRemoveCanvasMedia:(video: MediaStream | null ) => void
+  onSetCanvasMedia:(video: HTMLVideoElement | null ) => void,
+  onRemoveCanvasMedia:(video: HTMLVideoElement | null ) => void
 };
 
 const Content = (props: Props) => {
@@ -23,19 +23,21 @@ const Content = (props: Props) => {
 
   const setMedia = (props:Props)=>{
 
-    if(!props.media){
+    if(!props.media || !guestVideo.current){
       return
     }
-    props.onSetCanvasMedia(props.media)
+    guestVideo.current.srcObject = props.media
+    props.onSetCanvasMedia(guestVideo.current)
     setSwitchBtn(!switchBtn)
   }
 
   const removeMedia = (props:Props)=>{
 
-    if(!props.media){
+    if(!props.media || !guestVideo.current){
       return
     }
-    props.onRemoveCanvasMedia(props.media)
+    guestVideo.current.srcObject = props.media
+    props.onRemoveCanvasMedia(guestVideo.current)
     setSwitchBtn(!switchBtn)
   }
 

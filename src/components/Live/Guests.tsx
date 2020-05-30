@@ -4,8 +4,8 @@ import Guest from './Guest'
 type Props = {
   media: MediaStream | null,
   leave: string | null,
-  onSetCanvasMedia:(video: MediaStream | null ) => void,
-  onRemoveCanvasMedia:(video: MediaStream | null ) => void
+  onSetCanvasMedia:(video: HTMLVideoElement | null ) => void,
+  onRemoveCanvasMedia:(video: HTMLVideoElement | null ) => void
 }
 
 const Content = (props: Props) => {
