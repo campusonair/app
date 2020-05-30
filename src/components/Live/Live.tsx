@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Container,Row,Col } from 'react-bootstrap'
 import Guests from './Guests'
+import Guest from './Guest'
 import Video from './../Video'
 import Peer from 'skyway-js'
 import Config from '../../config'
@@ -24,11 +25,11 @@ const Content = (props: Props) => {
 
   React.useEffect(() => {
 
-    if (!canvasMedia || !canvasMediaArray) {
+    if (!canvasMedia || !canvasMediaArray || canvasMediaArray.includes(canvasMedia)) {
       return
     }
-    canvasMediaArray.push(canvasMedia)
-    setCanvasMediaArray(canvasMediaArray)
+
+    setCanvasMediaArray([...canvasMediaArray,canvasMedia])
 
   }, [canvasMedia])
 
@@ -74,7 +75,11 @@ const Content = (props: Props) => {
       <Row>
         <Col xs={9}>
           <div className={"canvas"}>
-            <div>canvas</div>
+            {
+              canvasMediaArray.map((stream)=>{
+                return <Guest media={stream} key={stream.id} onSetCanvasMedia={onSetCanvasMedia}/>
+              })
+            }
           </div>
           <div className={"scene"}>
             <button>Scene</button>
