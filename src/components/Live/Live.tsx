@@ -15,9 +15,17 @@ const Content = (props: Props) => {
   const [ownerMedia, setOwnerMedia] = React.useState<MediaStream|null>(null)
   const [leaveId, setLeaveId] = React.useState<string|null>(null)
   const [canvasMedias, setCanvasMedias] = React.useState<Array<HTMLVideoElement>>([])
-
-  const video = React.useRef<HTMLVideoElement>(null);
   const canvas = React.useRef<HTMLCanvasElement>(null);
+
+  React.useEffect(() => {
+
+    if (!canvas.current) {
+      return;
+    }
+    const canvasContext = canvas.current.getContext("2d", { desynchronized: true });
+    draw(canvasMedias!,canvasContext);
+
+  }, []);
 
   const onSetCanvasMedia = (video: HTMLVideoElement | null) => {
     if(!video || canvasMedias.includes(video)){
@@ -38,19 +46,13 @@ const Content = (props: Props) => {
     });
     setCanvasMedias(canvasMedias)
     const canvasContext = canvas!.current!.getContext("2d", { desynchronized: true });
-    canvasContext!.clearRect( 0, 0, 100, 100)
+    //Render Area in Canvas
+    const renderWidth = canvas.current!.width/2
+    const renderHeight = canvas.current!.height
+    const renderStartX = 0
+    const renderStartY = 0
+    canvasContext!.clearRect( renderStartX, renderStartY, renderWidth, renderHeight)
   }
-
-  React.useEffect(() => {
-
-    if (!canvas.current) {
-      return;
-    }
-    const canvasContext = canvas.current.getContext("2d", { desynchronized: true });
-    draw(canvasMedias!,canvasContext);
-
-  }, []);
-
 
   const draw = (
     videos: Array<HTMLVideoElement>,
@@ -62,16 +64,27 @@ const Content = (props: Props) => {
     }
 
     videos.forEach((video)=>{
-      canvasContext!.drawImage(video, 0, 0, 100, 100);
+
+      //Render Area in Canvas
+      const renderWidth = canvas.current!.width/2
+      const renderHeight = canvas.current!.height
+      const renderStartX = 0
+      const renderStartY = 0
+
+      //Cropped Video Size
+      const targetAspect = renderWidth/renderHeight
+      const cropWidth = targetAspect * video.videoHeight
+      const cropHeight = video.videoHeight
+      const cropStartX = (video.videoWidth - cropWidth)/2
+      const cropStartY = 0
+
+      canvasContext!.drawImage(video, cropStartX, cropStartY, cropWidth , cropHeight , renderStartX, renderStartY, renderWidth, renderHeight);
     })
 
     requestAnimationFrame(()=>{
       draw(videos,canvasContext)
     })
   };
-
-
-
 
   React.useEffect(() => {
     const peer = new Peer({ key: Config.skyWayApiKey });
