@@ -17,10 +17,18 @@ const Content = (props: Props) => {
   const [leaveId, setLeaveId] = React.useState<string|null>(null)
 
   const [canvasMedia, setCanvasMedia] = React.useState<MediaStream|null>(null)
+  const [removeCanvasMedia, setRemoveCanvasMedia] = React.useState<MediaStream|null>(null)
   const [canvasMediaArray, setCanvasMediaArray] = React.useState<Array<MediaStream>>([])
 
   const onSetCanvasMedia = (video: MediaStream | null) => {
-    setCanvasMedia(video)
+    if(!video){
+      return
+    }
+    if(canvasMediaArray.includes(video)){
+      setRemoveCanvasMedia(video)
+    }else{
+      setCanvasMedia(video)
+    }
   };
 
   React.useEffect(() => {
@@ -28,10 +36,26 @@ const Content = (props: Props) => {
     if (!canvasMedia || !canvasMediaArray || canvasMediaArray.includes(canvasMedia)) {
       return
     }
-
     setCanvasMediaArray([...canvasMediaArray,canvasMedia])
 
   }, [canvasMedia])
+
+
+  React.useEffect(() => {
+
+    if (!canvasMedia || !canvasMediaArray) {
+      return
+    }
+
+    if(canvasMediaArray.includes(canvasMedia)){
+
+      let leaveIdRemoved = canvasMediaArray.filter((media:any)=>{
+        return media !== canvasMedia
+      })
+      setCanvasMediaArray(leaveIdRemoved)
+    }
+
+  }, [removeCanvasMedia])
 
   React.useEffect(() => {
     const peer = new Peer({ key: Config.skyWayApiKey });
@@ -68,6 +92,8 @@ const Content = (props: Props) => {
     })
 
   }, [])
+
+  console.log(canvasMediaArray)
 
   return (
     <div className={"live-container"}>
