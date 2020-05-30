@@ -14,6 +14,7 @@ const Content = (props: Props) => {
   const [switchBtn, setSwitchBtn] = React.useState<boolean>(false)
 
   React.useEffect(() => {
+
     if(!guestVideo || !guestVideo.current || !props.media){
       return
     }
@@ -32,8 +33,8 @@ const Content = (props: Props) => {
 
   return (
     <div className={"guest video"}>
-      {!switchBtn && <Button onClick={()=>{setMedia(props)}}>Add</Button>}
-      {switchBtn && <Button onClick={()=>{removeMedia(props)}}>Remove</Button>}
+      {!switchBtn && <Button onClick={()=>{setMedia(props)}} className={"add-video-canvas"}>Add</Button>}
+      {switchBtn && <Button onClick={()=>{removeMedia(props)}} className={"remove-video-canvas"}>Remove</Button>}
       <video ref={guestVideo} autoPlay={true}/>
     </div>
   );

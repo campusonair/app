@@ -18,6 +18,10 @@
       display: block;
       padding-top: 56.25%;
     }
+    //TODO : Fix later.
+    .add-video-canvas, .remove-video-canvas{
+      display: none;
+    }
   }
   .scene{
     list-style: none;
