@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Container,Row,Col } from 'react-bootstrap'
+import { Container,Row,Col, Button } from 'react-bootstrap'
 import Guests from './Guests'
 import Guest from './Guest'
 import Video from './../Video'
@@ -117,7 +117,7 @@ const Content = (props: Props) => {
               <Video media={ownerMedia} />
             </div>
             <Guests media={guestMedia} leave={leaveId} onSetCanvasMedia={onSetCanvasMedia}/>
-            <button>+</button>
+            <Button variant="secondary">+</Button>
           </div>
         </Col>
         <Col xs={3}>
