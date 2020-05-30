@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Container,Row,Col, Button } from 'react-bootstrap'
 import './Guest.scss'
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 const Content = (props: Props) => {
 
   const guestVideo = React.useRef<HTMLVideoElement>(null)
+  const [switchBtn, setSwitchBtn] = React.useState<boolean>(false)
 
   React.useEffect(() => {
     if(!guestVideo || !guestVideo.current || !props.media){
@@ -18,10 +20,20 @@ const Content = (props: Props) => {
     guestVideo.current.srcObject = props.media
   }, [guestVideo, props])
 
+  const setMedia = (props:Props)=>{
+    props.onSetCanvasMedia(props.media)
+    setSwitchBtn(!switchBtn)
+  }
+
+  const removeMedia = (props:Props)=>{
+    props.onRemoveCanvasMedia(props.media)
+    setSwitchBtn(!switchBtn)
+  }
+
   return (
     <div className={"guest video"}>
-      <button onClick={()=>{props.onSetCanvasMedia(props.media)}}>Add</button>
-      <button onClick={()=>{props.onRemoveCanvasMedia(props.media)}}>Remove</button>
+      {!switchBtn && <Button onClick={()=>{setMedia(props)}}>Add</Button>}
+      {switchBtn && <Button onClick={()=>{removeMedia(props)}}>Remove</Button>}
       <video ref={guestVideo} autoPlay={true}/>
     </div>
   );
