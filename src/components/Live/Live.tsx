@@ -15,6 +15,23 @@ const Content = (props: Props) => {
   const [ownerMedia, setOwnerMedia] = React.useState<Promise<MediaStream>>()
   const [leaveId, setLeaveId] = React.useState<string|null>(null)
 
+  const [canvasMedia, setCanvasMedia] = React.useState<MediaStream|null>(null)
+  const [canvasMediaArray, setCanvasMediaArray] = React.useState<Array<MediaStream>>([])
+
+  const onSetCanvasMedia = (video: MediaStream | null) => {
+    setCanvasMedia(video)
+  };
+
+  React.useEffect(() => {
+
+    if (!canvasMedia || !canvasMediaArray) {
+      return
+    }
+    canvasMediaArray.push(canvasMedia)
+    setCanvasMediaArray(canvasMediaArray)
+
+  }, [canvasMedia])
+
   React.useEffect(() => {
     const peer = new Peer({ key: Config.skyWayApiKey });
 
@@ -68,7 +85,7 @@ const Content = (props: Props) => {
             <div className={"me"}>
               <Video media={ownerMedia} />
             </div>
-            <Guests media={guestMedia} leave={leaveId}/>
+            <Guests media={guestMedia} leave={leaveId} onSetCanvasMedia={onSetCanvasMedia}/>
             <button>+</button>
           </div>
         </Col>

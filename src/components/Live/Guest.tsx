@@ -2,7 +2,8 @@ import * as React from "react";
 import './Guest.scss'
 
 type Props = {
-  media:MediaStream
+  media:MediaStream,
+  onSetCanvasMedia:(video: MediaStream | null ) => void
 };
 
 const Content = (props: Props) => {
@@ -18,6 +19,7 @@ const Content = (props: Props) => {
 
   return (
     <div className={"guest video"}>
+      <button onClick={()=>{props.onSetCanvasMedia(props.media)}}>Add</button>
       <video ref={guestVideo} autoPlay={true}/>
     </div>
   );
