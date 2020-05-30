@@ -13,7 +13,7 @@ const Content = (props: Props) => {
   // const { liveId } = useParams()
   const liveId  = 'devRoom'
   const [guestMedia, setGuestMedia] = React.useState<MediaStream|null>(null)
-  const [ownerMedia, setOwnerMedia] = React.useState<Promise<MediaStream>>()
+  const [ownerMedia, setOwnerMedia] = React.useState<MediaStream|null>(null)
   const [leaveId, setLeaveId] = React.useState<string|null>(null)
   const [canvasMedias, setCanvasMedias] = React.useState<Array<MediaStream>>([])
 
@@ -48,9 +48,11 @@ const Content = (props: Props) => {
         audio: true
       }
       const userMedia = navigator.mediaDevices.getUserMedia(videoOptions)
-      setOwnerMedia(userMedia)
 
       userMedia.then((localStream) => {
+
+        setOwnerMedia(localStream)
+
         const room = peer.joinRoom(liveId!, {
           mode: 'sfu',
           stream: localStream,
@@ -71,8 +73,6 @@ const Content = (props: Props) => {
 
   }, [])
 
-  console.log(canvasMedias)
-
   return (
     <div className={"live-container"}>
     <Container fluid>
@@ -92,7 +92,7 @@ const Content = (props: Props) => {
           </div>
           <div className={"videos"}>
             <div className={"me"}>
-              <Video media={ownerMedia} />
+              <Guest media={ownerMedia} onSetCanvasMedia={onSetCanvasMedia} onRemoveCanvasMedia={onRemoveCanvasMedia}/>
             </div>
             <Guests media={guestMedia} leave={leaveId} onSetCanvasMedia={onSetCanvasMedia} onRemoveCanvasMedia={onRemoveCanvasMedia}/>
             <Button variant="secondary">+</Button>

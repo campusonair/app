@@ -3,7 +3,7 @@ import { Container,Row,Col, Button } from 'react-bootstrap'
 import './Guest.scss'
 
 type Props = {
-  media:MediaStream,
+  media: MediaStream| null,
   onSetCanvasMedia:(video: MediaStream | null ) => void,
   onRemoveCanvasMedia:(video: MediaStream | null ) => void
 };
@@ -22,11 +22,19 @@ const Content = (props: Props) => {
   }, [guestVideo, props])
 
   const setMedia = (props:Props)=>{
+
+    if(!props.media){
+      return
+    }
     props.onSetCanvasMedia(props.media)
     setSwitchBtn(!switchBtn)
   }
 
   const removeMedia = (props:Props)=>{
+
+    if(!props.media){
+      return
+    }
     props.onRemoveCanvasMedia(props.media)
     setSwitchBtn(!switchBtn)
   }
