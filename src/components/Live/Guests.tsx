@@ -4,7 +4,8 @@ import Guest from './Guest'
 type Props = {
   media: MediaStream | null,
   leave: string | null,
-  onSetCanvasMedia:(video: MediaStream | null ) => void
+  onSetCanvasMedia:(video: MediaStream | null ) => void,
+  onRemoveCanvasMedia:(video: MediaStream | null ) => void
 }
 
 const Content = (props: Props) => {
@@ -32,7 +33,7 @@ const Content = (props: Props) => {
     <div className={"guests videos"}>
       {
         guestMedias.map((stream)=>{
-          return <Guest media={stream} key={stream.id} onSetCanvasMedia={props.onSetCanvasMedia}/>
+          return <Guest media={stream} key={stream.id} onSetCanvasMedia={props.onSetCanvasMedia} onRemoveCanvasMedia={props.onRemoveCanvasMedia}/>
         })
       }
     </div>

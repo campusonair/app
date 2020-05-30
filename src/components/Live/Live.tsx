@@ -15,47 +15,25 @@ const Content = (props: Props) => {
   const [guestMedia, setGuestMedia] = React.useState<MediaStream|null>(null)
   const [ownerMedia, setOwnerMedia] = React.useState<Promise<MediaStream>>()
   const [leaveId, setLeaveId] = React.useState<string|null>(null)
-
-  const [canvasMedia, setCanvasMedia] = React.useState<MediaStream|null>(null)
-  const [removeCanvasMedia, setRemoveCanvasMedia] = React.useState<MediaStream|null>(null)
-  const [canvasMediaArray, setCanvasMediaArray] = React.useState<Array<MediaStream>>([])
+  const [canvasMedias, setCanvasMedias] = React.useState<Array<MediaStream>>([])
 
   const onSetCanvasMedia = (video: MediaStream | null) => {
-    if(!video){
+    if(!video || canvasMedias.includes(video)){
       return
     }
-    if(canvasMediaArray.includes(video)){
-      setRemoveCanvasMedia(video)
-    }else{
-      setCanvasMedia(video)
-    }
+    setCanvasMedias([...canvasMedias,video])
   };
 
-  React.useEffect(() => {
+  const onRemoveCanvasMedia =(video: MediaStream | null)=> {
 
-    if (!canvasMedia || !canvasMediaArray || canvasMediaArray.includes(canvasMedia)) {
+    if(!video || !canvasMedias.includes(video)){
       return
     }
-    setCanvasMediaArray([...canvasMediaArray,canvasMedia])
-
-  }, [canvasMedia])
-
-
-  React.useEffect(() => {
-
-    if (!canvasMedia || !canvasMediaArray) {
-      return
-    }
-
-    if(canvasMediaArray.includes(canvasMedia)){
-
-      let leaveIdRemoved = canvasMediaArray.filter((media:any)=>{
-        return media !== canvasMedia
-      })
-      setCanvasMediaArray(leaveIdRemoved)
-    }
-
-  }, [removeCanvasMedia])
+    let leaveIdRemoved = canvasMedias.filter((media:any)=>{
+      return media !== video
+    })
+    setCanvasMedias(leaveIdRemoved)
+  }
 
   React.useEffect(() => {
     const peer = new Peer({ key: Config.skyWayApiKey });
@@ -93,7 +71,7 @@ const Content = (props: Props) => {
 
   }, [])
 
-  console.log(canvasMediaArray)
+  console.log(canvasMedias)
 
   return (
     <div className={"live-container"}>
@@ -102,8 +80,8 @@ const Content = (props: Props) => {
         <Col xs={9}>
           <div className={"canvas"}>
             {
-              canvasMediaArray.map((stream)=>{
-                return <Guest media={stream} key={stream.id} onSetCanvasMedia={onSetCanvasMedia}/>
+              canvasMedias.map((stream)=>{
+                return <Guest media={stream} key={stream.id} onSetCanvasMedia={onSetCanvasMedia} onRemoveCanvasMedia={onRemoveCanvasMedia}/>
               })
             }
           </div>
@@ -116,7 +94,7 @@ const Content = (props: Props) => {
             <div className={"me"}>
               <Video media={ownerMedia} />
             </div>
-            <Guests media={guestMedia} leave={leaveId} onSetCanvasMedia={onSetCanvasMedia}/>
+            <Guests media={guestMedia} leave={leaveId} onSetCanvasMedia={onSetCanvasMedia} onRemoveCanvasMedia={onRemoveCanvasMedia}/>
             <Button variant="secondary">+</Button>
           </div>
         </Col>

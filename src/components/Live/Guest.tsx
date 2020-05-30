@@ -3,7 +3,8 @@ import './Guest.scss'
 
 type Props = {
   media:MediaStream,
-  onSetCanvasMedia:(video: MediaStream | null ) => void
+  onSetCanvasMedia:(video: MediaStream | null ) => void,
+  onRemoveCanvasMedia:(video: MediaStream | null ) => void
 };
 
 const Content = (props: Props) => {
@@ -20,6 +21,7 @@ const Content = (props: Props) => {
   return (
     <div className={"guest video"}>
       <button onClick={()=>{props.onSetCanvasMedia(props.media)}}>Add</button>
+      <button onClick={()=>{props.onRemoveCanvasMedia(props.media)}}>Remove</button>
       <video ref={guestVideo} autoPlay={true}/>
     </div>
   );
