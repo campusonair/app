@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Container,Row,Col } from 'react-bootstrap'
+import { Container,Row,Col, Button } from 'react-bootstrap'
 import Guests from './Guests'
 import Video from './../Video'
 import Peer from 'skyway-js'
@@ -69,7 +69,7 @@ const Content = (props: Props) => {
               <Video media={ownerMedia} />
             </div>
             <Guests media={guestMedia} leave={leaveId}/>
-            <button>+</button>
+            <Button>+</Button>
           </div>
         </Col>
         <Col xs={3}>
