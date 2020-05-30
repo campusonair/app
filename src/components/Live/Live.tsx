@@ -2,7 +2,6 @@ import * as React from "react";
 import { Container,Row,Col, Button } from 'react-bootstrap'
 import Guests from './Guests'
 import Guest from './Guest'
-import Video from './../Video'
 import Peer from 'skyway-js'
 import Config from '../../config'
 import './Live.scss'
