@@ -78,7 +78,7 @@ const Content = (props: Props) => {
       const targetAspect = renderWidth/renderHeight
       const cropWidth = targetAspect * video.videoHeight
       const cropHeight = video.videoHeight
-      const cropStartX = (video.videoWidth - cropWidth)/canvasMedias.length
+      const cropStartX = (video.videoWidth - cropWidth)/2
       const cropStartY = 0
 
       canvasContext!.drawImage(video, cropStartX, cropStartY, cropWidth , cropHeight , renderStartX, renderStartY, renderWidth, renderHeight);
