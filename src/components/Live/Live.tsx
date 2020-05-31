@@ -47,7 +47,7 @@ const Content = (props: Props) => {
     setCanvasMedias(canvasMedias)
     const canvasContext = canvas!.current!.getContext("2d", { desynchronized: true });
     //Render Area in Canvas
-    const renderWidth = canvas.current!.width/2
+    const renderWidth = canvas.current!.width/(canvasMedias.length?canvasMedias.length:1)
     const renderHeight = canvas.current!.height
     const renderStartX = 0
     const renderStartY = 0
@@ -63,19 +63,22 @@ const Content = (props: Props) => {
       return false;
     }
 
-    videos.forEach((video)=>{
+    canvasContext!.clearRect( 0, 0, canvas.current!.width, canvas.current!.height)
+
+    videos.forEach((video,index)=>{
 
       //Render Area in Canvas
-      const renderWidth = canvas.current!.width/2
+      const renderWidth = canvas.current!.width/(canvasMedias.length?canvasMedias.length:1)
       const renderHeight = canvas.current!.height
-      const renderStartX = 0
+      const renderStartX = renderWidth * index
+      console.log(renderStartX)
       const renderStartY = 0
 
       //Cropped Video Size
       const targetAspect = renderWidth/renderHeight
       const cropWidth = targetAspect * video.videoHeight
       const cropHeight = video.videoHeight
-      const cropStartX = (video.videoWidth - cropWidth)/2
+      const cropStartX = (video.videoWidth - cropWidth)/canvasMedias.length
       const cropStartY = 0
 
       canvasContext!.drawImage(video, cropStartX, cropStartY, cropWidth , cropHeight , renderStartX, renderStartY, renderWidth, renderHeight);
@@ -129,7 +132,7 @@ const Content = (props: Props) => {
     <Container fluid>
       <Row>
         <Col xs={9}>
-          <canvas ref={canvas} className={"canvas"}/>
+          <canvas ref={canvas} className={"canvas"} width={"1280"} height={"720"}/>
           <div className={"scene"}>
             <button>Scene</button>
             <button>Scene</button>
