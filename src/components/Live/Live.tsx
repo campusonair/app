@@ -63,8 +63,6 @@ const Content = (props: Props) => {
       return false;
     }
 
-    canvasContext!.clearRect( 0, 0, canvas.current!.width, canvas.current!.height)
-
     videos.forEach((video,index)=>{
 
       //Render Area in Canvas
@@ -88,6 +86,14 @@ const Content = (props: Props) => {
       draw(videos,canvasContext)
     })
   };
+
+
+
+
+
+
+
+
 
   React.useEffect(() => {
     const peer = new Peer({ key: Config.skyWayApiKey });
