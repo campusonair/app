@@ -15,6 +15,8 @@ const Content = (props: Props) => {
   const [ownerMedia, setOwnerMedia] = React.useState<MediaStream|null>(null)
   const [leaveId, setLeaveId] = React.useState<string|null>(null)
   const [canvasMedias, setCanvasMedias] = React.useState<Array<HTMLVideoElement>>([])
+  const [canvasContext, setCanvasContext] = React.useState<CanvasRenderingContext2D | null>(null)
+
   const canvas = React.useRef<HTMLCanvasElement>(null);
 
   React.useEffect(() => {
@@ -22,9 +24,9 @@ const Content = (props: Props) => {
     if (!canvas.current) {
       return;
     }
-    const canvasContext = canvas.current.getContext("2d", { desynchronized: true });
-    draw(canvasMedias!,canvasContext);
-
+    const context = canvas.current.getContext("2d", { desynchronized: true });
+    setCanvasContext(context)
+    draw(canvasMedias!,context);
   }, []);
 
   const onSetCanvasMedia = (video: HTMLVideoElement | null) => {
@@ -36,6 +38,9 @@ const Content = (props: Props) => {
   };
 
   const onRemoveCanvasMedia =(video: HTMLVideoElement | null)=> {
+
+    console.log("index")
+
     if(!video || !canvasMedias.includes(video)){
       return
     }
@@ -45,11 +50,21 @@ const Content = (props: Props) => {
       }
     });
     setCanvasMedias(canvasMedias)
-    const canvasContext = canvas!.current!.getContext("2d", { desynchronized: true });
+
+    console.log(video.srcObject)
+    //TODO : fincdIndexで Indexを見つけれない
+    const index = canvasMedias.findIndex(media => media!.srcObject  == video!.srcObject )
+
+    console.log(index)
+
+    if(-1 == index ){
+      return
+    }
+
     //Render Area in Canvas
     const renderWidth = canvas.current!.width/(canvasMedias.length?canvasMedias.length:1)
     const renderHeight = canvas.current!.height
-    const renderStartX = 0
+    const renderStartX = renderWidth * index
     const renderStartY = 0
     canvasContext!.clearRect( renderStartX, renderStartY, renderWidth, renderHeight)
   }
@@ -69,7 +84,6 @@ const Content = (props: Props) => {
       const renderWidth = canvas.current!.width/(canvasMedias.length?canvasMedias.length:1)
       const renderHeight = canvas.current!.height
       const renderStartX = renderWidth * index
-      console.log(renderStartX)
       const renderStartY = 0
 
       //Cropped Video Size
@@ -78,7 +92,6 @@ const Content = (props: Props) => {
       const cropHeight = video.videoHeight
       const cropStartX = (video.videoWidth - cropWidth)/2
       const cropStartY = 0
-
       canvasContext!.drawImage(video, cropStartX, cropStartY, cropWidth , cropHeight , renderStartX, renderStartY, renderWidth, renderHeight);
     })
 
@@ -86,6 +99,10 @@ const Content = (props: Props) => {
       draw(videos,canvasContext)
     })
   };
+
+
+
+
 
 
 
