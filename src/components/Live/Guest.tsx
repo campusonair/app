@@ -21,26 +21,6 @@ const Content = (props: Props) => {
     guestVideo.current.srcObject = props.media
   }, [guestVideo, props])
 
-  const onSetCanvasMedia = (video: HTMLVideoElement | null) => {
-    if(!video || canvasVideos.includes(video)){
-      return
-    }
-    canvasVideos.push(video)
-    setCanvasVideos(canvasVideos)
-  };
-
-  const onRemoveCanvasMedia =(video: HTMLVideoElement | null)=> {
-
-    const index = canvasVideos.findIndex(item => item === video )
-    if(!video || -1 == index ){
-      return
-    }
-    canvasVideos.splice(index,1)
-    setCanvasVideos(canvasVideos)
-    clearCanvas(canvas, canvasVideos, index)
-  }
-
-
   const setMedia = (props:Props)=>{
 
     if(!props.media || !guestVideo.current){

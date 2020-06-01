@@ -21,6 +21,25 @@ const Content = (props: Props) => {
   const canvas = React.useRef<HTMLCanvasElement>(null);
   const [canvasVideos, setCanvasVideos] = React.useState<Array<HTMLVideoElement>>([])
 
+  const onSetCanvasMedia = (video: HTMLVideoElement | null) => {
+    if(!video || canvasVideos.includes(video)){
+      return
+    }
+    canvasVideos.push(video)
+    setCanvasVideos(canvasVideos)
+  };
+
+  const onRemoveCanvasMedia =(video: HTMLVideoElement | null)=> {
+
+    const index = canvasVideos.findIndex(item => item === video )
+    if(!video || -1 == index ){
+      return
+    }
+    canvasVideos.splice(index,1)
+    setCanvasVideos(canvasVideos)
+    clearCanvas(canvas, canvasVideos, index)
+  }
+
   React.useEffect(() => {
     if (!canvas.current || !canvasVideos) {
       return;
