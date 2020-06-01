@@ -5,112 +5,28 @@ import Guest from './Guest'
 import Peer from 'skyway-js'
 import Config from '../../config'
 import './Live.scss'
+import {addCanvasVideos} from './addCanvasVideos'
+import {clearCanvas} from './clearCanvas'
 
 type Props = {};
 
 const Content = (props: Props) => {
+
   // const { liveId } = useParams()
   const liveId  = 'devRoom'
   const [guestMedia, setGuestMedia] = React.useState<MediaStream|null>(null)
   const [ownerMedia, setOwnerMedia] = React.useState<MediaStream|null>(null)
   const [leaveId, setLeaveId] = React.useState<string|null>(null)
-  const [canvasMedias, setCanvasMedias] = React.useState<Array<HTMLVideoElement>>([])
-  const [canvasContext, setCanvasContext] = React.useState<CanvasRenderingContext2D | null>(null)
 
   const canvas = React.useRef<HTMLCanvasElement>(null);
+  const [canvasVideos, setCanvasVideos] = React.useState<Array<HTMLVideoElement>>([])
 
   React.useEffect(() => {
-
-    if (!canvas.current) {
+    if (!canvas.current || !canvasVideos) {
       return;
     }
-    const context = canvas.current.getContext("2d", { desynchronized: true });
-    setCanvasContext(context)
-    draw(canvasMedias!,context);
+    addCanvasVideos(canvas,canvasVideos);
   }, []);
-
-  const onSetCanvasMedia = (video: HTMLVideoElement | null) => {
-    if(!video || canvasMedias.includes(video)){
-      return
-    }
-    canvasMedias.push(video)
-    setCanvasMedias(canvasMedias)
-  };
-
-  const onRemoveCanvasMedia =(video: HTMLVideoElement | null)=> {
-
-    console.log("index")
-
-    if(!video || !canvasMedias.includes(video)){
-      return
-    }
-    canvasMedias.forEach((item, index) => {
-      if(item === video) {
-        canvasMedias.splice(index,1)
-      }
-    });
-    setCanvasMedias(canvasMedias)
-
-    console.log(video.srcObject)
-    //TODO : fincdIndexで Indexを見つけれない
-    const index = canvasMedias.findIndex(media => media!.srcObject  == video!.srcObject )
-
-    console.log(index)
-
-    if(-1 == index ){
-      return
-    }
-
-    //Render Area in Canvas
-    const renderWidth = canvas.current!.width/(canvasMedias.length?canvasMedias.length:1)
-    const renderHeight = canvas.current!.height
-    const renderStartX = renderWidth * index
-    const renderStartY = 0
-    canvasContext!.clearRect( renderStartX, renderStartY, renderWidth, renderHeight)
-  }
-
-  const draw = (
-    videos: Array<HTMLVideoElement>,
-    canvasContext:CanvasRenderingContext2D | null
-  ) => {
-
-    if (!videos || !canvasContext){
-      return false;
-    }
-
-    videos.forEach((video,index)=>{
-
-      //Render Area in Canvas
-      const renderWidth = canvas.current!.width/(canvasMedias.length?canvasMedias.length:1)
-      const renderHeight = canvas.current!.height
-      const renderStartX = renderWidth * index
-      const renderStartY = 0
-
-      //Cropped Video Size
-      const targetAspect = renderWidth/renderHeight
-      const cropWidth = targetAspect * video.videoHeight
-      const cropHeight = video.videoHeight
-      const cropStartX = (video.videoWidth - cropWidth)/2
-      const cropStartY = 0
-      canvasContext!.drawImage(video, cropStartX, cropStartY, cropWidth , cropHeight , renderStartX, renderStartY, renderWidth, renderHeight);
-    })
-
-    requestAnimationFrame(()=>{
-      draw(videos,canvasContext)
-    })
-  };
-
-
-
-
-
-
-
-
-
-
-
-
 
   React.useEffect(() => {
     const peer = new Peer({ key: Config.skyWayApiKey });
