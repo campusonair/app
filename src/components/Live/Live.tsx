@@ -32,7 +32,7 @@ const Content = (props: Props) => {
   const onRemoveCanvasMedia =(video: HTMLVideoElement | null)=> {
 
     const index = canvasVideos.findIndex(item => item === video )
-    if(!video || -1 == index ){
+    if(!video || -1 === index ){
       return
     }
     canvasVideos.splice(index,1)
