@@ -63,7 +63,7 @@ const Content = (props: Props) => {
           <video ref={canvas} autoPlay={true}  className={"canvas"} width={"1280"} height={"720"}/>
           <div className={"videos"}>
             <div className={"me"}>
-              <Guest media={ownerMedia} canvasAddVideo={()=>{}} canvasRemoveVideo={()=>{}}/>
+              {/* <Guest media={ownerMedia} canvasAddVideo={()=>{}} canvasRemoveVideo={()=>{}}/> */}
             </div>
           </div>
         </Col>

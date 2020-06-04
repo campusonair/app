@@ -33,7 +33,7 @@ function App() {
               </>
             }
             <Route path="/live" exact component={Live} />
-            <Route path="/liveguest" exact component={LiveGuest} />
+            <Route path="/live/guest" exact component={LiveGuest} />
 
             {!loading && <Route path="*"><NoMatch /></Route>}
           </Switch>
