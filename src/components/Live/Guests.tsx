@@ -33,7 +33,7 @@ const Content = (props: Props) => {
     <div className={"guests videos"}>
       {
         guestMedias.map((stream)=>{
-          return <Guest media={stream} key={stream.id} canvasAddVideo={props.canvasAddVideo} canvasRemoveVideo={props.canvasRemoveVideo}/>
+          return <Guest media={stream} key={stream.id} canvasAddVideo={props.canvasAddVideo} canvasRemoveVideo={props.canvasRemoveVideo} mute={false}/>
         })
       }
     </div>

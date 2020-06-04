@@ -5,7 +5,8 @@ import './Guest.scss'
 type Props = {
   media: MediaStream| null,
   canvasAddVideo:(video: HTMLVideoElement | null ) => void,
-  canvasRemoveVideo:(video: HTMLVideoElement | null ) => void
+  canvasRemoveVideo:(video: HTMLVideoElement | null ) => void,
+  mute:boolean
 };
 
 const Content = (props: Props) => {
@@ -42,7 +43,7 @@ const Content = (props: Props) => {
     <div className={"guest video"}>
       {!switchBtn && <Button onClick={()=>{addVideo(props)}} className={"add-video-canvas"}>Add</Button>}
       {switchBtn && <Button onClick={()=>{removeVideo(props)}} className={"remove-video-canvas"}>Remove</Button>}
-      <video ref={guestVideo} autoPlay={true}/>
+      <video ref={guestVideo} autoPlay={true} muted={props.mute}/>
     </div>
   );
 };
