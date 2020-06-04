@@ -11,6 +11,7 @@ import Live from "./components/Live/Live"
 import NoMatch from "./components/NoMatch"
 
 import history from "./utils/history";
+import "./App.scss"
 
 function App() {
   const { isAuthenticated, loading } = useAuth0();
@@ -18,7 +19,7 @@ function App() {
   return (
     <div className="App">
       {/* Don't forget to include the history module */}
-      <Container>
+      <Container fluid>
         <Router history={history}>
           <Header />
           <Switch>
