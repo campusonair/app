@@ -5,8 +5,8 @@ import Guest from './Guest'
 import Peer from 'skyway-js'
 import Config from '../../config'
 import './Live.scss'
-import {addCanvasVideos} from './addCanvasVideos'
-import {clearCanvas} from './clearCanvas'
+import {drawCanvas} from '../../utils/canvas/draw'
+import {clearCanvas} from '../../utils/canvas/clear'
 
 type Props = {};
 
@@ -14,6 +14,7 @@ const Content = (props: Props) => {
 
   // const { liveId } = useParams()
   const liveId  = 'devRoom'
+
   const [guestMedia, setGuestMedia] = React.useState<MediaStream|null>(null)
   const [ownerMedia, setOwnerMedia] = React.useState<MediaStream|null>(null)
   const [leaveId, setLeaveId] = React.useState<string|null>(null)
@@ -21,7 +22,7 @@ const Content = (props: Props) => {
   const canvas = React.useRef<HTMLCanvasElement>(null);
   const [canvasVideos, setCanvasVideos] = React.useState<Array<HTMLVideoElement>>([])
 
-  const onSetCanvasMedia = (video: HTMLVideoElement | null) => {
+  const canvasAddVideo = (video: HTMLVideoElement | null) => {
     if(!video || canvasVideos.includes(video)){
       return
     }
@@ -29,8 +30,7 @@ const Content = (props: Props) => {
     setCanvasVideos(canvasVideos)
   };
 
-  const onRemoveCanvasMedia =(video: HTMLVideoElement | null)=> {
-
+  const canvasRemoveVideo =(video: HTMLVideoElement | null)=> {
     const index = canvasVideos.findIndex(item => item === video )
     if(!video || -1 === index ){
       return
@@ -41,10 +41,11 @@ const Content = (props: Props) => {
   }
 
   React.useEffect(() => {
+    console.log(canvasVideos)
     if (!canvas.current || !canvasVideos) {
       return;
     }
-    addCanvasVideos(canvas,canvasVideos);
+    drawCanvas(canvas,canvasVideos);
   }, []);
 
   React.useEffect(() => {
@@ -98,9 +99,9 @@ const Content = (props: Props) => {
           </div>
           <div className={"videos"}>
             <div className={"me"}>
-              <Guest media={ownerMedia} onSetCanvasMedia={onSetCanvasMedia} onRemoveCanvasMedia={onRemoveCanvasMedia}/>
+              <Guest media={ownerMedia} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo}/>
             </div>
-            <Guests media={guestMedia} leave={leaveId} onSetCanvasMedia={onSetCanvasMedia} onRemoveCanvasMedia={onRemoveCanvasMedia}/>
+            <Guests media={guestMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo}/>
             <Button variant="secondary">+</Button>
           </div>
         </Col>

@@ -4,8 +4,8 @@ import './Guest.scss'
 
 type Props = {
   media: MediaStream| null,
-  onSetCanvasMedia:(video: HTMLVideoElement | null ) => void,
-  onRemoveCanvasMedia:(video: HTMLVideoElement | null ) => void
+  canvasAddVideo:(video: HTMLVideoElement | null ) => void,
+  canvasRemoveVideo:(video: HTMLVideoElement | null ) => void
 };
 
 const Content = (props: Props) => {
@@ -14,37 +14,34 @@ const Content = (props: Props) => {
   const [switchBtn, setSwitchBtn] = React.useState<boolean>(false)
 
   React.useEffect(() => {
-
     if(!guestVideo || !guestVideo.current || !props.media){
       return
     }
     guestVideo.current.srcObject = props.media
   }, [guestVideo, props])
 
-  const setMedia = (props:Props)=>{
-
+  const addVideo = (props:Props)=>{
     if(!props.media || !guestVideo.current){
       return
     }
     guestVideo.current.srcObject = props.media
-    props.onSetCanvasMedia(guestVideo.current)
+    props.canvasAddVideo(guestVideo.current)
     setSwitchBtn(!switchBtn)
   }
 
-  const removeMedia = (props:Props)=>{
-
+  const removeVideo = (props:Props)=>{
     if(!props.media || !guestVideo.current){
       return
     }
     guestVideo.current.srcObject = props.media
-    props.onRemoveCanvasMedia(guestVideo.current)
+    props.canvasRemoveVideo(guestVideo.current)
     setSwitchBtn(!switchBtn)
   }
 
   return (
     <div className={"guest video"}>
-      {!switchBtn && <Button onClick={()=>{setMedia(props)}} className={"add-video-canvas"}>Add</Button>}
-      {switchBtn && <Button onClick={()=>{removeMedia(props)}} className={"remove-video-canvas"}>Remove</Button>}
+      {!switchBtn && <Button onClick={()=>{addVideo(props)}} className={"add-video-canvas"}>Add</Button>}
+      {switchBtn && <Button onClick={()=>{removeVideo(props)}} className={"remove-video-canvas"}>Remove</Button>}
       <video ref={guestVideo} autoPlay={true}/>
     </div>
   );
