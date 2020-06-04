@@ -10,6 +10,10 @@ import {clearCanvas} from '../../utils/canvas/clear'
 
 type Props = {};
 
+interface CanvasElement extends HTMLCanvasElement {
+  captureStream(): MediaStream;
+}
+
 const Content = (props: Props) => {
 
   // const { liveId } = useParams()
@@ -19,7 +23,7 @@ const Content = (props: Props) => {
   const [ownerMedia, setOwnerMedia] = React.useState<MediaStream|null>(null)
   const [leaveId, setLeaveId] = React.useState<string|null>(null)
 
-  const canvas = React.useRef<HTMLCanvasElement>(null);
+  const canvas = React.useRef<CanvasElement>(null);
   const [canvasVideos, setCanvasVideos] = React.useState<Array<HTMLVideoElement>>([])
 
   const canvasAddVideo = (video: HTMLVideoElement | null) => {
@@ -61,27 +65,25 @@ const Content = (props: Props) => {
         audio: true
       }
       const userMedia = navigator.mediaDevices.getUserMedia(videoOptions)
-
       userMedia.then((localStream) => {
-
         setOwnerMedia(localStream)
-
-        const room = peer.joinRoom(liveId!, {
-          mode: 'sfu',
-          stream: localStream,
-        });
-
-        room.on('stream', async stream => {
-          if(peer.id !== stream.peerId){
-            setGuestMedia(stream)
-          }
-        });
-
-        room.on('peerLeave', peerId => {
-          setLeaveId(peerId)
-        });
-
       })
+
+      const room = peer.joinRoom(liveId!, {
+        mode: 'sfu',
+        stream: canvas.current?.captureStream(),
+      });
+
+      room.on('stream', async stream => {
+        if(peer.id !== stream.peerId){
+          setGuestMedia(stream)
+        }
+      });
+
+      room.on('peerLeave', peerId => {
+        setLeaveId(peerId)
+      });
+
     })
 
   }, [])
