@@ -1,12 +1,9 @@
 import * as React from "react";
-import { Container,Row,Col, Button } from 'react-bootstrap'
-import Guests from './Guests'
+import { Container,Row,Col } from 'react-bootstrap'
 import Guest from './Guest'
 import Peer from 'skyway-js'
 import Config from '../../config'
 import './Live.scss'
-import {drawCanvas} from '../../utils/canvas/draw'
-import {clearCanvas} from '../../utils/canvas/clear'
 
 type Props = {};
 
@@ -15,11 +12,10 @@ const Content = (props: Props) => {
   // const { liveId } = useParams()
   const liveId  = 'devRoom'
 
-  const [guestMedia, setGuestMedia] = React.useState<MediaStream|null>(null)
   const [ownerMedia, setOwnerMedia] = React.useState<MediaStream|null>(null)
-  const [leaveId, setLeaveId] = React.useState<string|null>(null)
+  const canvas = React.useRef<HTMLVideoElement>(null)
 
-  const canvas = React.useRef<HTMLVideoElement>(null);
+  let guestMedia : string|null = null
 
   React.useEffect(() => {
     const peer = new Peer({ key: Config.skyWayApiKey });
@@ -45,9 +41,9 @@ const Content = (props: Props) => {
         });
 
         room.on('stream', async stream => {
-          if(peer.id !== stream.peerId){
+          if(peer.id !== stream.peerId && null === guestMedia){
             canvas.current!.srcObject = stream
-            // setGuestMedia(stream)
+            guestMedia = stream.peerId
           }
         });
       })
@@ -63,7 +59,7 @@ const Content = (props: Props) => {
           <video ref={canvas} autoPlay={true}  className={"canvas"} width={"1280"} height={"720"}/>
           <div className={"videos"}>
             <div className={"me"}>
-              {/* <Guest media={ownerMedia} canvasAddVideo={()=>{}} canvasRemoveVideo={()=>{}}/> */}
+              <Guest media={ownerMedia} canvasAddVideo={()=>{}} canvasRemoveVideo={()=>{}} muted={true}/>
             </div>
           </div>
         </Col>
