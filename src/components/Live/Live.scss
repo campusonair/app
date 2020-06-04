@@ -41,15 +41,10 @@
     .video{
       width: 180px;
       min-width: 180px;
-      height: auto;
+      height: 100px;
       position: relative;
       display: flex;
       margin: 0 10px;
-      &::before {
-        content: "";
-        display: block;
-        padding-top: 56.25%;
-      }
     }
   }
   .sidebar{
