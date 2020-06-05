@@ -5,7 +5,7 @@ type Props = {
   media: MediaStream | null,
   leave: string | null,
   canvasAddVideo:(video: HTMLVideoElement | null ) => void,
-  canvasRemoveVideo:(video: HTMLVideoElement | null ) => void
+  canvasRemoveVideo:(video: HTMLVideoElement | null ) => void,
 }
 
 const Content = (props: Props) => {
@@ -29,11 +29,18 @@ const Content = (props: Props) => {
     setGuestMedias(leaveIdRemoved)
   }, [props.leave])
 
+  React.useEffect(() => {
+    if (!guestMedias) {
+      return
+    }
+
+  }, [guestMedias])
+
   return (
     <div className={"guests videos"}>
       {
         guestMedias.map((stream)=>{
-          return <Guest media={stream} key={stream.id} canvasAddVideo={props.canvasAddVideo} canvasRemoveVideo={props.canvasRemoveVideo} muted={false}/>
+          return <Guest media={stream} key={stream.id} canvasAddVideo={props.canvasAddVideo} canvasRemoveVideo={props.canvasRemoveVideo} muted={false} leave={props.leave}/>
         })
       }
     </div>

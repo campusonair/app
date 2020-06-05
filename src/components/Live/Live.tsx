@@ -40,16 +40,15 @@ const Content = (props: Props) => {
       return
     }
     canvasVideos.splice(index,1)
+    drawCanvas(canvas,canvasVideos)
     setCanvasVideos(canvasVideos)
-    clearCanvas(canvas, canvasVideos, index)
   }
 
   React.useEffect(() => {
-    console.log(canvasVideos)
     if (!canvas.current || !canvasVideos) {
       return;
     }
-    drawCanvas(canvas,canvasVideos);
+    drawCanvas(canvas,canvasVideos)
   }, []);
 
   React.useEffect(() => {
@@ -92,7 +91,7 @@ const Content = (props: Props) => {
     <div className={"live-container"}>
     <Container fluid>
       <Row>
-        <Col xs={9}>
+        <Col xs={12} md={9}>
           <canvas ref={canvas} className={"canvas"} width={"1280"} height={"720"}/>
           <div className={"scene"}>
             <button>Scene</button>
@@ -101,13 +100,13 @@ const Content = (props: Props) => {
           </div>
           <div className={"videos"}>
             <div className={"me"}>
-              <Guest media={ownerMedia} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} muted={true}/>
+              <Guest media={ownerMedia} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} muted={true} leave={leaveId}/>
             </div>
-            <Guests media={guestMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo}/>
+            <Guests media={guestMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} />
             <Button variant="secondary">+</Button>
           </div>
         </Col>
-        <Col xs={3}>
+        <Col xs={12} md={3}>
           <div className={"sidebar"}>Sidebar</div>
         </Col>
       </Row>

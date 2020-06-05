@@ -6,15 +6,28 @@ type Props = {
   media: MediaStream| null,
   canvasAddVideo:(video: HTMLVideoElement | null ) => void,
   canvasRemoveVideo:(video: HTMLVideoElement | null ) => void,
-  muted:boolean
+  muted:boolean,
+  leave: string | null
 };
 
 const Content = (props: Props) => {
 
-  const guestVideo = React.useRef<HTMLVideoElement>(null)
+  const guestVideo = React.useRef<any>(null)
   const [switchBtn, setSwitchBtn] = React.useState<boolean>(false)
 
   React.useEffect(() => {
+    if(!guestVideo || !props.leave || !guestVideo.current.srcObject){
+      return
+    }
+
+    if(props.leave === guestVideo.current?.srcObject!.peerId){
+      props.canvasRemoveVideo(guestVideo.current)
+    }
+
+  }, [props.leave])
+
+  React.useEffect(() => {
+
     if(!guestVideo || !guestVideo.current || !props.media){
       return
     }

@@ -3,7 +3,7 @@ import { Container,Row,Col } from 'react-bootstrap'
 import Guest from './Guest'
 import Peer from 'skyway-js'
 import Config from '../../config'
-import './Live.scss'
+import './LiveGuest.scss'
 
 type Props = {};
 
@@ -52,18 +52,18 @@ const Content = (props: Props) => {
   }, [])
 
   return (
-    <div className={"live-container"}>
+    <div className={"live-container guest"}>
     <Container fluid>
       <Row>
-        <Col xs={9}>
+      <Col xs={12} md={9}>
           <video ref={canvas} autoPlay={true}  className={"canvas"} width={"1280"} height={"720"}/>
           <div className={"videos"}>
             <div className={"me"}>
-              <Guest media={ownerMedia} canvasAddVideo={()=>{}} canvasRemoveVideo={()=>{}} muted={true}/>
+              <Guest media={ownerMedia} canvasAddVideo={()=>{}} canvasRemoveVideo={()=>{}} muted={true} leave={""}/>
             </div>
           </div>
         </Col>
-        <Col xs={3}>
+        <Col xs={12} md={3}>
           <div className={"sidebar"}>Sidebar</div>
         </Col>
       </Row>

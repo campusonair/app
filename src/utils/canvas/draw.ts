@@ -11,7 +11,6 @@ export const drawCanvas = (canvas: React.RefObject<HTMLCanvasElement>, videos: A
 
     videos.forEach((video,index)=>{
       const { sourceTopLeftX, sourceTopLeftY, sourceWidth, sourceHeight,  destinationTopLeftX, destinationTopLeftY, destinationWidth, destinationHeight} = layoutCanvas(canvas,videos,index)
-      console.log(sourceTopLeftX, sourceTopLeftY, sourceWidth, sourceHeight,  destinationTopLeftX, destinationTopLeftY, destinationWidth, destinationHeight)
       canvas2D!.drawImage(video, sourceTopLeftX, sourceTopLeftY, sourceWidth, sourceHeight,  destinationTopLeftX, destinationTopLeftY, destinationWidth, destinationHeight);
 
     })
