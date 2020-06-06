@@ -13,13 +13,16 @@ const Content = (props: Props) => {
   const [guestMedias, setGuestMedias] = React.useState<Array<MediaStream>>([])
 
   React.useEffect(() => {
+
     if (!props.media) {
       return
     }
     setGuestMedias([...guestMedias,props.media])
+
   }, [props.media])
 
   React.useEffect(() => {
+
     if (!props.leave || !guestMedias) {
       return
     }
@@ -27,20 +30,14 @@ const Content = (props: Props) => {
       return media.peerId !== props.leave
     })
     setGuestMedias(leaveIdRemoved)
+
   }, [props.leave])
-
-  React.useEffect(() => {
-    if (!guestMedias) {
-      return
-    }
-
-  }, [guestMedias])
 
   return (
     <div className={"guests videos"}>
       {
         guestMedias.map((stream)=>{
-          return <Guest media={stream} key={stream.id} canvasAddVideo={props.canvasAddVideo} canvasRemoveVideo={props.canvasRemoveVideo} muted={false} leave={props.leave}/>
+          return <Guest key={stream.id} media={stream} leave={props.leave} canvasAddVideo={props.canvasAddVideo} canvasRemoveVideo={props.canvasRemoveVideo} muted={false} />
         })
       }
     </div>

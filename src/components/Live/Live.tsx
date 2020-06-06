@@ -100,7 +100,7 @@ const Content = (props: Props) => {
           </div>
           <div className={"videos"}>
             <div className={"me"}>
-              <Guest media={ownerMedia} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} muted={true} leave={leaveId}/>
+              <Guest media={ownerMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} muted={true} />
             </div>
             <Guests media={guestMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} />
             <Button variant="secondary">+</Button>

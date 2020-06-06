@@ -16,6 +16,14 @@ const Content = (props: Props) => {
   const [switchBtn, setSwitchBtn] = React.useState<boolean>(false)
 
   React.useEffect(() => {
+
+    if(!guestVideo || !guestVideo.current || !props.media){
+      return
+    }
+    guestVideo.current.srcObject = props.media
+  }, [guestVideo, props])
+
+  React.useEffect(() => {
     if(!guestVideo || !props.leave || !guestVideo.current.srcObject){
       return
     }
@@ -23,16 +31,7 @@ const Content = (props: Props) => {
     if(props.leave === guestVideo.current?.srcObject!.peerId){
       props.canvasRemoveVideo(guestVideo.current)
     }
-
   }, [props.leave])
-
-  React.useEffect(() => {
-
-    if(!guestVideo || !guestVideo.current || !props.media){
-      return
-    }
-    guestVideo.current.srcObject = props.media
-  }, [guestVideo, props])
 
   const addVideo = (props:Props)=>{
     if(!props.media || !guestVideo.current){
