@@ -40,15 +40,19 @@ const Content = (props: Props) => {
       return
     }
     canvasVideos.splice(index,1)
-    drawCanvas(canvas,canvasVideos)
+    drawCanvas(canvas,canvasVideos,0)
     setCanvasVideos(canvasVideos)
+  }
+
+  const canvasChangeLayout = ()=>{
+
   }
 
   React.useEffect(() => {
     if (!canvas.current || !canvasVideos) {
       return;
     }
-    drawCanvas(canvas,canvasVideos)
+    drawCanvas(canvas,canvasVideos,0)
   }, []);
 
   React.useEffect(() => {
@@ -94,9 +98,9 @@ const Content = (props: Props) => {
         <Col xs={12} md={9}>
           <canvas ref={canvas} className={"canvas"} width={"1280"} height={"720"}/>
           <div className={"scene"}>
-            <button>Scene</button>
-            <button>Scene</button>
-            <button>Scene</button>
+            <Button variant="secondary" onClick={canvasChangeLayout}>Scene1</Button>
+            <Button variant="secondary" onClick={canvasChangeLayout}>Scene2</Button>
+            <Button variant="secondary" onClick={canvasChangeLayout}>Scene3</Button>
           </div>
           <div className={"videos"}>
             <div className={"me"}>
