@@ -31,6 +31,9 @@ export const layoutCanvas = (canvas: React.RefObject<HTMLCanvasElement>, videos:
       destinationWidth = canvas.current!.width / devided
       destinationHeight = destinationAspect * destinationWidth
 
+
+
+
       if(0 === indexDevidedLeft){
         destinationTopLeftX = destinationWidth * (videoIndex/devided)
         const rowNum = row -1 < 0 ? 0 : row - 1
@@ -39,6 +42,9 @@ export const layoutCanvas = (canvas: React.RefObject<HTMLCanvasElement>, videos:
         destinationTopLeftX = destinationWidth * ((videoIndex-1)/devided)
         destinationTopLeftY = destinationHeight * (row+1) //1
       }
+
+
+
 
     //Odd Videos
     }else{
