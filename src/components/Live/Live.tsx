@@ -25,61 +25,100 @@ const Content = (props: Props) => {
 
   const canvas = React.useRef<CanvasElement>(null);
   const [canvasVideos, setCanvasVideos] = React.useState<Array<HTMLVideoElement>>([])
-  const [canvasAudios, setCanvasAudios] = React.useState<Array<MediaStreamTrack>>([])
-
   const [mixedMedia, setMixedMedia] = React.useState<MediaStream|null>(null)
+  const [room, setRoom] = React.useState<any|null>(null)
 
-  const mixAudioVideo = (canvasAudios :Array<MediaStreamTrack>, mixedMedia:MediaStream)=>{
+  // const mixAudioVideo = (canvasVideos :Array<HTMLVideoElement>)=>{
 
-    if(!canvasAudios || [] === canvasAudios){
+  //   if(!canvasVideos || !mixedMedia){
+  //     return
+  //   }
+
+  //   console.log(canvasVideos)
+  //   console.log(mixedMedia)
+  //   console.log(room)
+
+  //   // if(1 === canvasVideos.length && !mixedMedia.getAudioTracks()[0]){
+
+
+  //   //     let stream = canvasVideos[0].srcObject;
+  //   //     if(!stream || !('id' in stream)){
+  //   //       return
+  //   //     }
+
+  //   //     console.log(mixedMedia.getAudioTracks())
+  //   //     console.log(stream.getAudioTracks()[0])
+
+  //   //     mixedMedia.addTrack(stream.getAudioTracks()[0])
+  //   //     console.log(mixedMedia.getAudioTracks())
+
+  //   // }else{
+
+  //       let audioContext = new AudioContext();
+  //       let splitter = audioContext.createChannelSplitter(2)
+  //       let gain_node = audioContext.createGain()
+  //       gain_node.gain.value = 1
+  //       let merger = audioContext.createChannelMerger(2)
+  //       let dist = audioContext.createMediaStreamDestination()
+
+  //       canvasVideos.forEach(video =>{
+
+  //       if(!video.srcObject || !('id' in video.srcObject)){
+  //         return
+  //       }
+  //       let source = audioContext.createMediaStreamSource(video.srcObject)
+  //       source.connect(splitter)
+  //       splitter.connect(gain_node)
+  //       gain_node.connect(
+  //         merger,
+  //         0,
+  //         0
+  //       )
+  //       merger.connect(dist)
+  //     })
+
+  //     if(mixedMedia.getAudioTracks()[0]){
+  //       mixedMedia.getAudioTracks()[0].stop()
+  //       mixedMedia.removeTrack(mixedMedia.getAudioTracks()[0])
+  //       mixedMedia.addTrack(dist.stream.getAudioTracks()[0])
+  //     }else{
+  //       mixedMedia.addTrack(dist.stream.getAudioTracks()[0])
+  //     }
+  //   // }
+  //   room.replaceStream(mixedMedia)
+  // }
+
+  const mixAudioVideo = (video:HTMLVideoElement)=>{
+
+    let stream = video.srcObject;
+    if(!mixedMedia || !stream || !('id' in stream)){
       return
     }
 
-    let audioContext = new AudioContext();
-    let splitter = audioContext.createChannelSplitter(2)
-    let gain_node = audioContext.createGain()
-    gain_node.gain.value = 1
-    let merger = audioContext.createChannelMerger(2)
-    let dist = audioContext.createMediaStreamDestination()
+    stream.getAudioTracks().forEach(track => track.enabled = true);
 
-    canvasAudios.forEach(audio =>{
-      // console.log(audio)
-      // let source = audioContext.createMediaStreamTrackSource(audio)
-      // source.connect(splitter)
-      // splitter.connect(gain_node)
-      // gain_node.connect(
-      //   merger,
-      //   0,
-      //   0
-      // )
-      // if(2 === gain_node.numberOfInputs){
-      //   gain_node.connect(
-      //     merger,
-      //     1,
-      //     1
-      //   )
-      // }
-      // merger.connect(dist)
-      mixedMedia!.addTrack(audio)
-      // mixedMedia!.addTrack(dist.stream.getAudioTracks()[0])
-      // video_stream!.removeTrack(dist.stream.getAudioTracks()[0])
-    })
+    if(mixedMedia.getAudioTracks()[0]){
+      mixedMedia.removeTrack(mixedMedia.getAudioTracks()[0])
+      mixedMedia.addTrack(stream.getAudioTracks()[0])
+    }else{
+      mixedMedia.addTrack(stream.getAudioTracks()[0])
+    }
+    room.replaceStream(mixedMedia)
   }
 
   const canvasAddVideo = (video: HTMLVideoElement | null) => {
+
+    if(!video || !video.srcObject || !('id' in video.srcObject)){
+      return
+    }
+    console.log(video.srcObject.getAudioTracks())
+    console.log(ownerMedia?.getVideoTracks())
+
     if(!video || !video.srcObject || canvasVideos.includes(video)){
       return
     }
-
-    //Check type Mediastream
-    if ('getAudioTracks' in video.srcObject) {
-      let audio = video.srcObject?.getAudioTracks()[0]
-      canvasAudios.push(audio)
-      mixAudioVideo(canvasAudios,mixedMedia!)
-      setCanvasAudios(canvasAudios)
-    }
-
     canvasVideos.push(video)
+    mixAudioVideo(video)
     setCanvasVideos(canvasVideos)
   };
 
@@ -89,16 +128,17 @@ const Content = (props: Props) => {
       return
     }
 
-    if ('getAudioTracks' in video.srcObject) {
-      const audio = video.srcObject?.getAudioTracks()[0]
-      const index = canvasAudios.findIndex(item => item === audio)
-      canvasAudios.splice(index,1)
-      mixAudioVideo(canvasAudios,mixedMedia!)
-      setCanvasAudios(canvasAudios)
-    }
+    // if ('getAudioTracks' in video.srcObject) {
+    //   const audio = video.srcObject?.getAudioTracks()[0]
+    //   const index = canvasAudios.findIndex(item => item === audio)
+    //   canvasAudios.splice(index,1)
+    //   mixAudioVideo(canvasAudios,mixedMedia!)
+    //   setCanvasAudios(canvasAudios)
+    // }
 
     canvasVideos.splice(index,1)
     drawCanvas(canvas,canvasVideos,0)
+    mixAudioVideo(video)
     setCanvasVideos(canvasVideos)
   }
 
@@ -113,14 +153,8 @@ const Content = (props: Props) => {
     drawCanvas(canvas,canvasVideos,0)
   }, []);
 
-  React.useEffect(() => {
 
-    if(!canvas.current?.captureStream()){
-      return
-    }
-    let video_stream = new MediaStream();
-    video_stream.addTrack(canvas.current?.captureStream().getVideoTracks()[0])
-    setMixedMedia(video_stream)
+  React.useEffect(() => {
 
     const peer = new Peer({ key: Config.skyWayApiKey });
 
@@ -134,30 +168,55 @@ const Content = (props: Props) => {
         audio: true
       }
       const userMedia = navigator.mediaDevices.getUserMedia(videoOptions)
+
       userMedia.then((localStream) => {
         setOwnerMedia(localStream)
 
-      const room = peer.joinRoom(liveId!, {
-        mode: 'sfu',
-        stream: video_stream,
-      });
-
-      room.on('stream', async stream => {
-        stream.getAudioTracks()[0].enabled = false
-
-        if(peer.id !== stream.peerId){
-          setGuestMedia(stream)
+        if(!canvas.current?.captureStream()){
+          return
         }
-      });
+        let video_stream = new MediaStream();
+        video_stream.addTrack(canvas.current?.captureStream().getVideoTracks()[0])
+        localStream.getAudioTracks().forEach(track => track.enabled = false);
+        video_stream.addTrack(localStream.getAudioTracks()[0])
+        setMixedMedia(video_stream)
 
-      room.on('peerLeave', peerId => {
-        setLeaveId(peerId)
-      });
+        const room = peer.joinRoom(liveId!, {
+          mode: 'sfu',
+          stream: video_stream,
+        });
+
+        setRoom(room)
+
+        //roomかvideostreamがstateに保存した後だと効かない
+        room.on('stream', async stream => {
+
+          if(peer.id !== stream.peerId){
+
+            stream.getAudioTracks().forEach(track => track.enabled = false);
+            setGuestMedia(stream)
+
+            // console.log(video_stream?.getAudioTracks())
+
+            // if(video_stream.getAudioTracks()[0]){
+            //   video_stream.getAudioTracks()[0].stop()
+            //   video_stream.removeTrack(video_stream.getAudioTracks()[0])
+            //   video_stream.addTrack(stream.getAudioTracks()[0])
+            // }else{
+            //   video_stream.addTrack(stream.getAudioTracks()[0])
+            // }
+            // console.log(video_stream?.getAudioTracks())
+            // room.replaceStream(video_stream)
+          }
+
+        });
+
+        room.on('peerLeave', peerId => {
+          setLeaveId(peerId)
+        });
 
      })
-
     })
-
   }, [])
 
   return (
@@ -173,7 +232,7 @@ const Content = (props: Props) => {
           </div>
           <div className={"videos"}>
             <div className={"me"}>
-              <Guest media={ownerMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} muted={true} />
+              <Guest media={ownerMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} muted={false} />
             </div>
             <Guests media={guestMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} />
             <Button variant="secondary">+</Button>

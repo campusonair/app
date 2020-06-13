@@ -24,7 +24,7 @@ const Content = (props: Props) => {
   }, [guestVideo, props])
 
   React.useEffect(() => {
-    if(!guestVideo || !props.leave || !guestVideo.current.srcObject){
+    if(!guestVideo || !guestVideo.current || !props.leave || !guestVideo.current.srcObject){
       return
     }
 
@@ -38,6 +38,7 @@ const Content = (props: Props) => {
       return
     }
     guestVideo.current.srcObject = props.media
+    console.log(guestVideo.current.srcObject.getAudioTracks())
     props.canvasAddVideo(guestVideo.current)
     setSwitchBtn(!switchBtn)
   }
