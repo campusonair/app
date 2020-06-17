@@ -56,10 +56,10 @@ const Content = (props: Props) => {
     <Container fluid>
       <Row>
       <Col xs={12} md={9}>
-          <video ref={canvas} autoPlay={true}  className={"canvas"} width={"1280"} height={"720"}/>
+          <video ref={canvas} autoPlay={true} className={"canvas"} width={"1280"} height={"720"}/>
           <div className={"videos"}>
             <div className={"me"}>
-              <Guest media={ownerMedia} canvasAddVideo={()=>{}} canvasRemoveVideo={()=>{}} muted={true} leave={""}/>
+              <Guest media={ownerMedia} canvasAddVideo={()=>{}} canvasRemoveVideo={()=>{}} leave={""}/>
             </div>
           </div>
         </Col>
