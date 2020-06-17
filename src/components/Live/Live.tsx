@@ -7,6 +7,7 @@ import Config from '../../config'
 import './Live.scss'
 import {drawCanvas} from '../../utils/canvas/draw'
 import {clearCanvas} from '../../utils/canvas/clear'
+import {mixAudio} from './../../utils/mixAudio'
 
 type Props = {};
 
@@ -28,64 +29,13 @@ const Content = (props: Props) => {
   const [mixedMedia, setMixedMedia] = React.useState<MediaStream|null>(null)
   const [room, setRoom] = React.useState<any|null>(null)
 
-  const mixAudioVideo = (canvasVideos:Array<HTMLVideoElement>)=>{
-
-    if(!mixedMedia || !audio.current){
-      return
-    }
-
-    let audioContext = new AudioContext();
-    let splitter = audioContext.createChannelSplitter(2)
-    let gain_node = audioContext.createGain()
-    gain_node.gain.value = 1
-    let merger = audioContext.createChannelMerger(2)
-    let dist = audioContext.createMediaStreamDestination()
-
-    if(0 === canvasVideos.length){
-      mixedMedia.getAudioTracks().forEach(track => track.enabled = false);
-      audio.current.srcObject = mixedMedia
-      room.replaceStream(mixedMedia)
-      return
-    }
-
-    canvasVideos.forEach(video =>{
-      if(!video.srcObject || !('id' in video.srcObject)){
-        return
-      }
-      video.srcObject.getAudioTracks().forEach(track => track.enabled = true);
-      let source = audioContext.createMediaStreamSource(video.srcObject)
-      source.connect(splitter)
-      splitter.connect(gain_node)
-      gain_node.connect(
-        merger,
-          0,
-          0
-        )
-        merger.connect(dist)
-    })
-
-    let stream = dist.stream;
-    if(!stream){
-      return
-    }
-
-    if(mixedMedia.getAudioTracks()[0]){
-      mixedMedia.removeTrack(mixedMedia.getAudioTracks()[0])
-      mixedMedia.addTrack(stream.getAudioTracks()[0])
-    }else{
-      mixedMedia.addTrack(stream.getAudioTracks()[0])
-    }
-    audio.current.srcObject = mixedMedia
-    room.replaceStream(mixedMedia)
-  }
 
   const canvasAddVideo = (video: HTMLVideoElement | null) => {
-
     if(!video || !video.srcObject || canvasVideos.includes(video)){
       return
     }
     canvasVideos.push(video)
-    mixAudioVideo(canvasVideos)
+    mixAudio({canvasVideos,mixedMedia,audio,room})
     setCanvasVideos(canvasVideos)
   };
 
@@ -95,13 +45,9 @@ const Content = (props: Props) => {
       return
     }
     canvasVideos.splice(index,1)
-    mixAudioVideo(canvasVideos)
+    mixAudio({canvasVideos,mixedMedia,audio,room})
     drawCanvas(canvas,canvasVideos,0)
     setCanvasVideos(canvasVideos)
-  }
-
-  const canvasChangeLayout = ()=>{
-
   }
 
   React.useEffect(() => {
@@ -147,7 +93,9 @@ const Content = (props: Props) => {
         setRoom(room)
 
         room.on('stream', async stream => {
+
           if(peer.id !== stream.peerId){
+
             stream.getAudioTracks().forEach(track => track.enabled = false);
             setGuestMedia(stream)
           }
@@ -169,9 +117,9 @@ const Content = (props: Props) => {
           <canvas ref={canvas} className={"canvas"} width={"1280"} height={"720"}/>
           <audio ref={audio} autoPlay={true}/>
           <div className={"scene"}>
-            <Button variant="secondary" onClick={canvasChangeLayout}>Scene1</Button>
-            <Button variant="secondary" onClick={canvasChangeLayout}>Scene2</Button>
-            <Button variant="secondary" onClick={canvasChangeLayout}>Scene3</Button>
+            <Button variant="secondary">Scene1</Button>
+            <Button variant="secondary">Scene2</Button>
+            <Button variant="secondary">Scene3</Button>
           </div>
           <div className={"videos"}>
             <div className={"me"}>
