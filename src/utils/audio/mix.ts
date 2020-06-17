@@ -1,4 +1,3 @@
-
 type Props = {
   canvasVideos:Array<HTMLVideoElement>,
   mixedMedia: MediaStream|null,
@@ -7,7 +6,8 @@ type Props = {
 };
 
 export const mixAudio = (props:Props)=>{
-  if(!props.mixedMedia || !props.audio.current){
+
+  if(!props.mixedMedia || !props.audio.current || [] === props.canvasVideos){
     return
   }
 
@@ -17,13 +17,6 @@ export const mixAudio = (props:Props)=>{
   gain_node.gain.value = 1
   let merger = audioContext.createChannelMerger(2)
   let dist = audioContext.createMediaStreamDestination()
-
-  if(0 === props.canvasVideos.length){
-    props.mixedMedia.getAudioTracks().forEach(track => track.enabled = false);
-    props.audio.current.srcObject = props.mixedMedia
-    props.room.replaceStream(props.mixedMedia)
-    return
-  }
 
   props.canvasVideos.forEach(video =>{
     if(!video.srcObject || !('id' in video.srcObject)){
@@ -41,17 +34,10 @@ export const mixAudio = (props:Props)=>{
       merger.connect(dist)
   })
 
-  let stream = dist.stream;
-  if(!stream){
-    return
-  }
+  props.mixedMedia.removeTrack(props.mixedMedia.getAudioTracks()[0])
+  props.mixedMedia.addTrack(dist.stream.getAudioTracks()[0])
 
-  if(props.mixedMedia.getAudioTracks()[0]){
-    props.mixedMedia.removeTrack(props.mixedMedia.getAudioTracks()[0])
-    props.mixedMedia.addTrack(stream.getAudioTracks()[0])
-  }else{
-    props.mixedMedia.addTrack(stream.getAudioTracks()[0])
-  }
   props.audio.current.srcObject = props.mixedMedia
   props.room.replaceStream(props.mixedMedia)
+
 }

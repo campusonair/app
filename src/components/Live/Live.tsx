@@ -7,7 +7,9 @@ import Config from '../../config'
 import './Live.scss'
 import {drawCanvas} from '../../utils/canvas/draw'
 import {clearCanvas} from '../../utils/canvas/clear'
-import {mixAudio} from './../../utils/mixAudio'
+import {mixAudio} from '../../utils/audio/mix'
+import {muteAudio} from '../../utils/audio/mute'
+
 
 type Props = {};
 
@@ -45,7 +47,7 @@ const Content = (props: Props) => {
       return
     }
     canvasVideos.splice(index,1)
-    mixAudio({canvasVideos,mixedMedia,audio,room})
+    muteAudio({canvasVideos,mixedMedia,audio,room})
     drawCanvas(canvas,canvasVideos,0)
     setCanvasVideos(canvasVideos)
   }
