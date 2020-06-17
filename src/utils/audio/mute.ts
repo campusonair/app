@@ -7,7 +7,7 @@ type Props = {
 
 export const muteAudio = (props:Props)=>{
 
-  if(!props.mixedMedia || !props.audio.current || [] !== props.canvasVideos ){
+  if(!props.mixedMedia || !props.audio.current || 0 !== props.canvasVideos.length){
     return
   }
 

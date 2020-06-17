@@ -5,8 +5,8 @@ import Guest from './Guest'
 import Peer from 'skyway-js'
 import Config from '../../config'
 import './Live.scss'
+import {setUpCanvas} from '../../utils/canvas/setUp'
 import {drawCanvas} from '../../utils/canvas/draw'
-import {clearCanvas} from '../../utils/canvas/clear'
 import {mixAudio} from '../../utils/audio/mix'
 import {muteAudio} from '../../utils/audio/mute'
 
@@ -30,7 +30,6 @@ const Content = (props: Props) => {
   const [canvasVideos, setCanvasVideos] = React.useState<Array<HTMLVideoElement>>([])
   const [mixedMedia, setMixedMedia] = React.useState<MediaStream|null>(null)
   const [room, setRoom] = React.useState<any|null>(null)
-
 
   const canvasAddVideo = (video: HTMLVideoElement | null) => {
     if(!video || !video.srcObject || canvasVideos.includes(video)){
@@ -78,21 +77,13 @@ const Content = (props: Props) => {
       userMedia.then((localStream) => {
         setOwnerMedia(localStream)
 
-        if(!canvas.current?.captureStream()){
-          return
-        }
-        let video_stream = new MediaStream();
-        video_stream.addTrack(canvas.current?.captureStream().getVideoTracks()[0])
-        localStream.getAudioTracks().forEach(track => track.enabled = false);
-        video_stream.addTrack(localStream.getAudioTracks()[0])
-        setMixedMedia(video_stream)
+        const canvasStream = setUpCanvas(canvas,localStream)
+        setMixedMedia(canvasStream!)
 
         const room = peer.joinRoom(liveId!, {
           mode: 'sfu',
-          stream: video_stream,
+          stream: canvasStream,
         });
-
-        setRoom(room)
 
         room.on('stream', async stream => {
 
@@ -106,6 +97,8 @@ const Content = (props: Props) => {
         room.on('peerLeave', peerId => {
           setLeaveId(peerId)
         });
+
+        setRoom(room)
 
      })
     })
