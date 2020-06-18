@@ -7,11 +7,14 @@ import Config from '../../config'
 import './Live.scss'
 import {setUpCanvas} from '../../utils/canvas/setUp'
 import {drawCanvas} from '../../utils/canvas/draw'
-import {mixAudio} from '../../utils/audio/mix'
-import {muteAudio} from '../../utils/audio/mute'
-
 
 type Props = {};
+type roomData = {
+  src:String
+  data:{
+    canvasVideosId:Array<String>
+  }
+}
 
 interface CanvasElement extends HTMLCanvasElement {
   captureStream(): MediaStream;
@@ -26,30 +29,46 @@ const Content = (props: Props) => {
   const [ownerMedia, setOwnerMedia] = React.useState<MediaStream|null>(null)
   const [leaveId, setLeaveId] = React.useState<string|null>(null)
   const canvas = React.useRef<CanvasElement>(null);
-  const audio = React.useRef<HTMLAudioElement>(null);
   const [canvasVideos, setCanvasVideos] = React.useState<Array<HTMLVideoElement>>([])
-  const [mixedMedia, setMixedMedia] = React.useState<MediaStream|null>(null)
   const [room, setRoom] = React.useState<any|null>(null)
 
   const canvasAddVideo = (video: HTMLVideoElement | null) => {
+
     if(!video || !video.srcObject || canvasVideos.includes(video)){
       return
     }
     canvasVideos.push(video)
-    mixAudio({canvasVideos,mixedMedia,audio,room})
     setCanvasVideos(canvasVideos)
+
+    const canvasVideosId = canvasVideos.map((video) => {
+      if(!video || !video.srcObject || !('id' in video.srcObject)){
+        return
+      }else{
+        return video!.srcObject!.id
+      }
+    })
+    room.send({canvasVideosId:canvasVideosId})
   };
 
   const canvasRemoveVideo =(video: HTMLVideoElement | null)=> {
+
     const index = canvasVideos.findIndex(item => item === video )
     if(!video || !video.srcObject || -1 === index ){
       return
     }
     canvasVideos.splice(index,1)
-    muteAudio({canvasVideos,mixedMedia,audio,room})
     drawCanvas(canvas,canvasVideos,0)
     setCanvasVideos(canvasVideos)
+    const canvasVideosId = canvasVideos.map((video) => {
+      if(!video || !video.srcObject || !('id' in video.srcObject)){
+        return
+      }else{
+        return video!.srcObject!.id
+      }
+    })
+    room.send({canvasVideosId:canvasVideosId})
   }
+
 
   React.useEffect(() => {
     if (!canvas.current || !canvasVideos) {
@@ -78,7 +97,6 @@ const Content = (props: Props) => {
         setOwnerMedia(localStream)
 
         const canvasStream = setUpCanvas(canvas,localStream)
-        setMixedMedia(canvasStream!)
 
         const room = peer.joinRoom(liveId!, {
           mode: 'sfu',
@@ -87,19 +105,39 @@ const Content = (props: Props) => {
 
         room.on('stream', async stream => {
 
-          if(peer.id !== stream.peerId){
-
-            stream.getAudioTracks().forEach(track => track.enabled = false);
+           if(peer.id !== stream.peerId){
             setGuestMedia(stream)
-          }
+           }
         });
 
         room.on('peerLeave', peerId => {
           setLeaveId(peerId)
         });
 
-        setRoom(room)
+        room.on('data', (props:roomData) => {
 
+          console.log("hello")
+          console.log(props)
+
+
+          if(undefined === canvasStream){
+            return
+          }
+
+          //これが聞いてない、自分に対してはdataを受け取れない？
+          //=>自分に対しては受け取れない。だから、onclcikにしこむ
+
+          const find = props.data.canvasVideosId.find(videoId => videoId === canvasStream.id)
+          if(find){
+            canvasStream.getAudioTracks().forEach(track => track.enabled = true)
+            room.replaceStream(canvasStream)
+          }else{
+            canvasStream.getAudioTracks().forEach(track => track.enabled = false)
+            room.replaceStream(canvasStream)
+          }
+
+        });
+        setRoom(room)
      })
     })
   }, [])
@@ -110,7 +148,6 @@ const Content = (props: Props) => {
       <Row>
         <Col xs={12} md={9}>
           <canvas ref={canvas} className={"canvas"} width={"1280"} height={"720"}/>
-          <audio ref={audio} autoPlay={true}/>
           <div className={"scene"}>
             <Button variant="secondary">Scene1</Button>
             <Button variant="secondary">Scene2</Button>
@@ -118,9 +155,9 @@ const Content = (props: Props) => {
           </div>
           <div className={"videos"}>
             <div className={"me"}>
-              <Guest media={ownerMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} />
+              <Guest media={ownerMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} muted={true}/>
             </div>
-            <Guests media={guestMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} />
+            <Guests media={guestMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} muted={false}/>
             <Button variant="secondary">+</Button>
           </div>
         </Col>

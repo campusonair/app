@@ -6,7 +6,8 @@ type Props = {
   media: MediaStream| null,
   canvasAddVideo:(video: HTMLVideoElement | null ) => void,
   canvasRemoveVideo:(video: HTMLVideoElement | null ) => void,
-  leave: string | null
+  leave: string | null,
+  muted:boolean
 };
 
 const Content = (props: Props) => {
@@ -55,7 +56,7 @@ const Content = (props: Props) => {
     <div className={"guest video"}>
       {!switchBtn && <Button onClick={()=>{addVideo(props)}} className={"add-video-canvas"}>Add</Button>}
       {switchBtn && <Button onClick={()=>{removeVideo(props)}} className={"remove-video-canvas"}>Remove</Button>}
-      <video ref={guestVideo} autoPlay={true} muted={muted}/>
+      <video ref={guestVideo} autoPlay={true} muted={props.muted}/>
     </div>
   );
 };

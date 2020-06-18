@@ -6,6 +6,7 @@ type Props = {
   leave: string | null,
   canvasAddVideo:(video: HTMLVideoElement | null ) => void,
   canvasRemoveVideo:(video: HTMLVideoElement | null ) => void,
+  muted:boolean
 }
 
 const Content = (props: Props) => {
@@ -37,7 +38,7 @@ const Content = (props: Props) => {
     <div className={"guests videos"}>
       {
         guestMedias.map((stream)=>{
-          return <Guest key={stream.id} media={stream} leave={props.leave} canvasAddVideo={props.canvasAddVideo} canvasRemoveVideo={props.canvasRemoveVideo}/>
+          return <Guest key={stream.id} media={stream} leave={props.leave} canvasAddVideo={props.canvasAddVideo} canvasRemoveVideo={props.canvasRemoveVideo} muted={props.muted}/>
         })
       }
     </div>
