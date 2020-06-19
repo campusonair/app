@@ -27,6 +27,9 @@ const Content = (props: Props) => {
 
   const [guestMedia, setGuestMedia] = React.useState<MediaStream|null>(null)
   const [ownerMedia, setOwnerMedia] = React.useState<MediaStream|null>(null)
+  const [canvasMedia, setCanvasMedia] = React.useState<MediaStream|null>(null)
+
+
   const [leaveId, setLeaveId] = React.useState<string|null>(null)
   const canvas = React.useRef<CanvasElement>(null);
   const [canvasVideos, setCanvasVideos] = React.useState<Array<HTMLVideoElement>>([])
@@ -34,7 +37,7 @@ const Content = (props: Props) => {
 
   const canvasAddVideo = (video: HTMLVideoElement | null) => {
 
-    if(!video || !video.srcObject || canvasVideos.includes(video)){
+    if(!video || !video.srcObject || canvasVideos.includes(video) || !ownerMedia || !canvasMedia){
       return
     }
     canvasVideos.push(video)
@@ -47,18 +50,30 @@ const Content = (props: Props) => {
         return video!.srcObject!.id
       }
     })
+
+    const find = canvasVideosId.find(videoId => videoId === ownerMedia.id)
+    if(find){
+      canvasMedia.getAudioTracks().forEach(track => track.enabled = true)
+      room.replaceStream(canvasMedia)
+    }else{
+      canvasMedia.getAudioTracks().forEach(track => track.enabled = false)
+      room.replaceStream(canvasMedia)
+    }
+
     room.send({canvasVideosId:canvasVideosId})
+
   };
 
   const canvasRemoveVideo =(video: HTMLVideoElement | null)=> {
 
     const index = canvasVideos.findIndex(item => item === video )
-    if(!video || !video.srcObject || -1 === index ){
+    if(!video || !video.srcObject || -1 === index || !ownerMedia){
       return
     }
     canvasVideos.splice(index,1)
     drawCanvas(canvas,canvasVideos,0)
     setCanvasVideos(canvasVideos)
+
     const canvasVideosId = canvasVideos.map((video) => {
       if(!video || !video.srcObject || !('id' in video.srcObject)){
         return
@@ -66,6 +81,16 @@ const Content = (props: Props) => {
         return video!.srcObject!.id
       }
     })
+
+    const find = canvasVideosId.find(videoId => videoId === ownerMedia.id)
+    if(find){
+      ownerMedia.getAudioTracks().forEach(track => track.enabled = true)
+      room.replaceStream(ownerMedia)
+    }else{
+      ownerMedia.getAudioTracks().forEach(track => track.enabled = false)
+      room.replaceStream(ownerMedia)
+    }
+
     room.send({canvasVideosId:canvasVideosId})
   }
 
@@ -98,6 +123,8 @@ const Content = (props: Props) => {
 
         const canvasStream = setUpCanvas(canvas,localStream)
 
+        setCanvasMedia(canvasStream!)
+
         const room = peer.joinRoom(liveId!, {
           mode: 'sfu',
           stream: canvasStream,
@@ -114,32 +141,10 @@ const Content = (props: Props) => {
           setLeaveId(peerId)
         });
 
-        room.on('data', (props:roomData) => {
-
-          console.log("hello")
-          console.log(props)
-
-
-          if(undefined === canvasStream){
-            return
-          }
-
-          //これが聞いてない、自分に対してはdataを受け取れない？
-          //=>自分に対しては受け取れない。だから、onclcikにしこむ
-
-          const find = props.data.canvasVideosId.find(videoId => videoId === canvasStream.id)
-          if(find){
-            canvasStream.getAudioTracks().forEach(track => track.enabled = true)
-            room.replaceStream(canvasStream)
-          }else{
-            canvasStream.getAudioTracks().forEach(track => track.enabled = false)
-            room.replaceStream(canvasStream)
-          }
-
-        });
         setRoom(room)
      })
     })
+
   }, [])
 
   return (

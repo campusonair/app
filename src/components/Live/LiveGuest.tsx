@@ -22,13 +22,14 @@ const Content = (props: Props) => {
   const liveId  = 'devRoom'
 
   const [ownerMedia, setOwnerMedia] = React.useState<MediaStream|null>(null)
-  const [guestMedia, setGuestMedia] = React.useState<MediaStream|null>(null)
-  const [canvasStream, setCanvasStream] = React.useState<Array<MediaStream>>([])
+  const [canvasPeerId, setCanvasPeerId] = React.useState<String|null>(null)
+  const [canvasStream, setCanvasStream] = React.useState<Array<any>>([])
+  // const [canvasStream, setCanvasStream] = React.useState<Array<MediaStream>>([])
   const canvas = React.useRef<HTMLVideoElement>(null)
 
   React.useEffect(() => {
-    const peer = new Peer({ key: Config.skyWayApiKey });
 
+    const peer = new Peer({ key: Config.skyWayApiKey });
     peer.on('open', () => {
 
       const videoOptions = {
@@ -38,6 +39,7 @@ const Content = (props: Props) => {
         },
         audio: true
       }
+
       const userMedia = navigator.mediaDevices.getUserMedia(videoOptions)
 
       userMedia.then((localStream) => {
@@ -49,25 +51,21 @@ const Content = (props: Props) => {
         const room = peer.joinRoom(liveId!, {
           mode: 'sfu',
           stream: localStream,
-        });
+        })
 
         room.on('stream', async stream => {
 
-          if(peer.id !== stream.peerId && !guestMedia){
-            if(!canvas.current){
-              return
-            }
-            canvas.current.srcObject = stream
-            setGuestMedia(stream)
+          if(stream.peerId === canvasPeerId){
+
+            setCanvasStream([...canvasStream,stream])
 
           }else if(peer.id !== stream.peerId){
             setCanvasStream([...canvasStream,stream])
-
           }
-        });
+        })
 
         room.on('data', (props:roomData) => {
-
+          setCanvasPeerId(props.src)
           const find = props.data.canvasVideosId.find(videoId => videoId === localStream.id)
           if(find){
             localStream.getAudioTracks().forEach(track => track.enabled = true)
@@ -76,11 +74,25 @@ const Content = (props: Props) => {
             localStream.getAudioTracks().forEach(track => track.enabled = false)
             room.replaceStream(localStream)
           }
-        });
+        })
       })
     })
 
   }, [])
+
+  React.useEffect(() => {
+
+    if(!canvas.current || canvasStream.length <= 0 || !canvasPeerId){
+      return
+    }
+    const find = canvasStream.find(video => video.peerId === canvasPeerId)
+    if(!find){
+      return
+    }
+    canvas!.current!.srcObject = find
+
+  }, [canvas.current,canvasStream,canvasPeerId]);
+
 
   return (
     <div className={"live-container guest"}>
