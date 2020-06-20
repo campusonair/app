@@ -40,7 +40,13 @@ const Content = (props: Props) => {
       return
     }
 
+    console.log(ownerMedia)
+    console.log(ownerMedia.getAudioTracks())
+    console.log(ownerMedia.getAudioTracks()[0])
+
     if(video.srcObject.id === ownerMedia.id){
+      canvasMedia.removeTrack(canvasMedia.getVideoTracks()[0])
+      canvasMedia.addTrack(video.srcObject.getVideoTracks()[0])
       video.srcObject = canvasMedia
     }
 
@@ -73,7 +79,6 @@ const Content = (props: Props) => {
     }
 
     video!.srcObject!.getAudioTracks().forEach((track:MediaStreamTrack) => track.enabled = false)
-    video!.srcObject!.getAudioTracks().forEach((track:MediaStreamTrack) => console.log(track))
 
     const index = canvasVideos.findIndex(item => item === video )
 
@@ -124,8 +129,6 @@ const Content = (props: Props) => {
         setOwnerMedia(localStream)
 
         const canvasStream = setUpCanvas(canvas,localStream)
-
-        canvasStream?.getVideoTracks().forEach(track=>track.enabled= false)
 
         setCanvasMedia(canvasStream!)
 
