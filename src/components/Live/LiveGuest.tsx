@@ -24,7 +24,6 @@ const Content = (props: Props) => {
   const [ownerMedia, setOwnerMedia] = React.useState<MediaStream|null>(null)
   const [canvasPeerId, setCanvasPeerId] = React.useState<String|null>(null)
   const [guestStream, setGuestStream] = React.useState<Array<any>>([])
-  // const [guestStream, setguestStream] = React.useState<Array<MediaStream>>([])
   const canvas = React.useRef<HTMLVideoElement>(null)
 
   React.useEffect(() => {
@@ -59,7 +58,7 @@ const Content = (props: Props) => {
           if(peer.id !== stream.peerId){
 
             stream.getAudioTracks().forEach((track:MediaStreamTrack) => track.enabled = false)
-            guestStreamTemp = [...guestStream,stream]
+            guestStreamTemp.push(stream)
             setGuestStream(guestStreamTemp)
           }
         })

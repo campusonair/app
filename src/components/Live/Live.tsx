@@ -125,6 +125,8 @@ const Content = (props: Props) => {
 
         const canvasStream = setUpCanvas(canvas,localStream)
 
+        canvasStream?.getVideoTracks().forEach(track=>track.enabled= false)
+
         setCanvasMedia(canvasStream!)
 
         const room = peer.joinRoom(liveId!, {
