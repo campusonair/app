@@ -1,6 +1,7 @@
 import React from "react";
 import { Navbar, NavDropdown, Button } from 'react-bootstrap'
 import { useAuth0 } from "../react-auth0-spa";
+import "./Header.scss"
 
 const NavBar = () => {
   const { isAuthenticated, loginWithRedirect, logout, loading, user } = useAuth0();
