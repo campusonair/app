@@ -46,8 +46,6 @@ const Content = (props: Props) => {
 
         setOwnerMedia(localStream)
 
-        localStream.getAudioTracks().forEach(track => track.enabled = false)
-
         const room = peer.joinRoom(liveId!, {
           mode: 'sfu',
           stream: localStream,
@@ -59,6 +57,8 @@ const Content = (props: Props) => {
         room.on('stream', async stream => {
 
           if(peer.id !== stream.peerId){
+
+            stream.getAudioTracks().forEach((track:MediaStreamTrack) => track.enabled = false)
             guestStreamTemp = [...guestStream,stream]
             setGuestStream(guestStreamTemp)
           }
@@ -68,9 +68,6 @@ const Content = (props: Props) => {
 
           setCanvasPeerId(props.src)
 
-          console.log(guestStreamTemp)
-          console.log(props)
-
           guestStreamTemp.forEach((stream:MediaStream) => {
             if(-1 !== props.data.canvasVideosId.indexOf(stream.id)){
               stream.getAudioTracks().forEach((track:MediaStreamTrack) => track.enabled = true)
@@ -78,15 +75,6 @@ const Content = (props: Props) => {
               stream.getAudioTracks().forEach((track:MediaStreamTrack) => track.enabled = false)
             }
           })
-
-          // const find = props.data.canvasVideosId.find(videoId => videoId === localStream.id)
-          // if(find){
-          //   localStream.getAudioTracks().forEach(track => track.enabled = true)
-          //   room.replaceStream(localStream)
-          // }else{
-          //   localStream.getAudioTracks().forEach(track => track.enabled = false)
-          //   room.replaceStream(localStream)
-          // }
 
         })
       })
