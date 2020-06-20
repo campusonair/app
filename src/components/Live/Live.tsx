@@ -37,9 +37,14 @@ const Content = (props: Props) => {
 
   const canvasAddVideo = (video: HTMLVideoElement | null) => {
 
-    if(!video || !video.srcObject || canvasVideos.includes(video) || !ownerMedia || !canvasMedia){
+    if(!video || !video.srcObject || canvasVideos.includes(video) || !ownerMedia || !canvasMedia || !('id' in video.srcObject)){
       return
     }
+
+    if(video.srcObject.id === ownerMedia.id){
+      video.srcObject = canvasMedia
+    }
+
     canvasVideos.push(video)
     setCanvasVideos(canvasVideos)
 
@@ -51,14 +56,25 @@ const Content = (props: Props) => {
       }
     })
 
-    const find = canvasVideosId.find(videoId => videoId === ownerMedia.id)
-    if(find){
-      canvasMedia.getAudioTracks().forEach(track => track.enabled = true)
-      room.replaceStream(canvasMedia)
-    }else{
-      canvasMedia.getAudioTracks().forEach(track => track.enabled = false)
-      room.replaceStream(canvasMedia)
-    }
+    canvasVideos.forEach((video:HTMLVideoElement) => {
+      if(!video || !video.srcObject || !('id' in video.srcObject)){
+        return
+      }
+      if(-1 !== canvasVideosId.indexOf(video.srcObject.id)){
+        video.srcObject.getAudioTracks().forEach((track:MediaStreamTrack) => track.enabled = true)
+      }else{
+        video.srcObject.getAudioTracks().forEach((track:MediaStreamTrack) => track.enabled = false)
+      }
+    })
+
+    // const find = canvasVideosId.find(videoId => videoId === ownerMedia.id)
+    // if(find){
+    //   canvasMedia.getAudioTracks().forEach(track => track.enabled = true)
+    //   room.replaceStream(canvasMedia)
+    // }else{
+    //   canvasMedia.getAudioTracks().forEach(track => track.enabled = false)
+    //   room.replaceStream(canvasMedia)
+    // }
 
     room.send({canvasVideosId:canvasVideosId})
 
@@ -66,10 +82,18 @@ const Content = (props: Props) => {
 
   const canvasRemoveVideo =(video: HTMLVideoElement | null)=> {
 
-    const index = canvasVideos.findIndex(item => item === video )
-    if(!video || !video.srcObject || -1 === index || !ownerMedia){
+    if(!video || !video.srcObject || !ownerMedia || !('id' in video.srcObject)){
       return
     }
+    if(video.srcObject.id === ownerMedia.id){
+      video.srcObject = canvasMedia
+    }
+    const index = canvasVideos.findIndex(item => item === video )
+
+    if(-1 === index){
+      return
+    }
+
     canvasVideos.splice(index,1)
     drawCanvas(canvas,canvasVideos,0)
     setCanvasVideos(canvasVideos)
@@ -82,14 +106,25 @@ const Content = (props: Props) => {
       }
     })
 
-    const find = canvasVideosId.find(videoId => videoId === ownerMedia.id)
-    if(find){
-      ownerMedia.getAudioTracks().forEach(track => track.enabled = true)
-      room.replaceStream(ownerMedia)
-    }else{
-      ownerMedia.getAudioTracks().forEach(track => track.enabled = false)
-      room.replaceStream(ownerMedia)
-    }
+    canvasVideos.forEach((video:HTMLVideoElement) => {
+      if(!video || !video.srcObject || !('id' in video.srcObject)){
+        return
+      }
+      if(-1 !== canvasVideosId.indexOf(video.srcObject.id)){
+        video.srcObject.getAudioTracks().forEach((track:MediaStreamTrack) => track.enabled = true)
+      }else{
+        video.srcObject.getAudioTracks().forEach((track:MediaStreamTrack) => track.enabled = false)
+      }
+    })
+
+    // const find = canvasVideosId.find(videoId => videoId === ownerMedia.id)
+    // if(find){
+    //   ownerMedia.getAudioTracks().forEach(track => track.enabled = true)
+    //   room.replaceStream(ownerMedia)
+    // }else{
+    //   ownerMedia.getAudioTracks().forEach(track => track.enabled = false)
+    //   room.replaceStream(ownerMedia)
+    // }
 
     room.send({canvasVideosId:canvasVideosId})
   }

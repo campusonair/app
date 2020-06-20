@@ -23,8 +23,8 @@ const Content = (props: Props) => {
 
   const [ownerMedia, setOwnerMedia] = React.useState<MediaStream|null>(null)
   const [canvasPeerId, setCanvasPeerId] = React.useState<String|null>(null)
-  const [canvasStream, setCanvasStream] = React.useState<Array<any>>([])
-  // const [canvasStream, setCanvasStream] = React.useState<Array<MediaStream>>([])
+  const [guestStream, setGuestStream] = React.useState<Array<any>>([])
+  // const [guestStream, setguestStream] = React.useState<Array<MediaStream>>([])
   const canvas = React.useRef<HTMLVideoElement>(null)
 
   React.useEffect(() => {
@@ -53,27 +53,41 @@ const Content = (props: Props) => {
           stream: localStream,
         })
 
+
+        let guestStreamTemp:Array<MediaStream> = [];
+
         room.on('stream', async stream => {
 
-          if(stream.peerId === canvasPeerId){
-
-            setCanvasStream([...canvasStream,stream])
-
-          }else if(peer.id !== stream.peerId){
-            setCanvasStream([...canvasStream,stream])
+          if(peer.id !== stream.peerId){
+            guestStreamTemp = [...guestStream,stream]
+            setGuestStream(guestStreamTemp)
           }
         })
 
         room.on('data', (props:roomData) => {
+
           setCanvasPeerId(props.src)
-          const find = props.data.canvasVideosId.find(videoId => videoId === localStream.id)
-          if(find){
-            localStream.getAudioTracks().forEach(track => track.enabled = true)
-            room.replaceStream(localStream)
-          }else{
-            localStream.getAudioTracks().forEach(track => track.enabled = false)
-            room.replaceStream(localStream)
-          }
+
+          console.log(guestStreamTemp)
+          console.log(props)
+
+          guestStreamTemp.forEach((stream:MediaStream) => {
+            if(-1 !== props.data.canvasVideosId.indexOf(stream.id)){
+              stream.getAudioTracks().forEach((track:MediaStreamTrack) => track.enabled = true)
+            }else{
+              stream.getAudioTracks().forEach((track:MediaStreamTrack) => track.enabled = false)
+            }
+          })
+
+          // const find = props.data.canvasVideosId.find(videoId => videoId === localStream.id)
+          // if(find){
+          //   localStream.getAudioTracks().forEach(track => track.enabled = true)
+          //   room.replaceStream(localStream)
+          // }else{
+          //   localStream.getAudioTracks().forEach(track => track.enabled = false)
+          //   room.replaceStream(localStream)
+          // }
+
         })
       })
     })
@@ -82,16 +96,16 @@ const Content = (props: Props) => {
 
   React.useEffect(() => {
 
-    if(!canvas.current || canvasStream.length <= 0 || !canvasPeerId){
+    if(!canvas.current || guestStream.length <= 0 || !canvasPeerId){
       return
     }
-    const find = canvasStream.find(video => video.peerId === canvasPeerId)
+    const find = guestStream.find(video => video.peerId === canvasPeerId)
     if(!find){
       return
     }
     canvas!.current!.srcObject = find
 
-  }, [canvas.current,canvasStream,canvasPeerId]);
+  }, [canvas.current,guestStream,canvasPeerId]);
 
 
   return (
@@ -107,7 +121,7 @@ const Content = (props: Props) => {
           </div>
           <div className={"guest audio"}>
           {
-            canvasStream.length >= 0 && canvasStream.map((stream) => {
+            guestStream.length > 0 && guestStream.map((stream) => {
               return <GuestAudio media={stream} key={stream.id} />
             })
           }

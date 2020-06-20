@@ -14,6 +14,7 @@ const Content = (props: Props) => {
       return
     }
     guestAudio.current.srcObject = props.media
+
   }, [guestAudio, props])
 
   return <audio ref={guestAudio} autoPlay={true}/>
