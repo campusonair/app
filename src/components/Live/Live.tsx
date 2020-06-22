@@ -7,14 +7,9 @@ import Config from '../../config'
 import './Live.scss'
 import {setUpCanvas} from '../../utils/canvas/setUp'
 import {drawCanvas} from '../../utils/canvas/draw'
+import {mute} from '../../utils/audio/mute'
 
 type Props = {};
-type roomData = {
-  src:String
-  data:{
-    canvasVideosId:Array<String>
-  }
-}
 
 interface CanvasElement extends HTMLCanvasElement {
   captureStream(): MediaStream;
@@ -27,12 +22,36 @@ const Content = (props: Props) => {
 
   const [guestMedia, setGuestMedia] = React.useState<MediaStream|null>(null)
   const [ownerMedia, setOwnerMedia] = React.useState<MediaStream|null>(null)
-  const [canvasMedia, setCanvasMedia] = React.useState<MediaStream|null>(null)
 
-  const [leaveId, setLeaveId] = React.useState<string|null>(null)
+  const [canvasMedia, setCanvasMedia] = React.useState<MediaStream|null>(null)
   const canvas = React.useRef<CanvasElement>(null);
   const [canvasVideos, setCanvasVideos] = React.useState<Array<HTMLVideoElement>>([])
+
   const [room, setRoom] = React.useState<any|null>(null)
+  const [leaveId, setLeaveId] = React.useState<string|null>(null)
+
+
+  const getCanvasVideoId = (canvasVideos:HTMLVideoElement[]) =>{
+    return canvasVideos.map((video) => {
+      if(!video || !video.srcObject || !('id' in video.srcObject)){
+        return
+      }else{
+        return video!.srcObject!.id
+      }
+    })
+  }
+
+  const updateOwnerMediaAudio = ( canvasMedia:MediaStream|null, ownerMedia:MediaStream|null, video:HTMLVideoElement ) =>{
+
+    if(!canvasMedia || !video || !video.srcObject || !ownerMedia || !('id' in video.srcObject)){
+      return
+    }
+    if(video.srcObject.id === ownerMedia.id){
+      canvasMedia.removeTrack(canvasMedia.getVideoTracks()[0])
+      canvasMedia.addTrack(video.srcObject.getVideoTracks()[0])
+    }
+  }
+
 
   const canvasAddVideo = (video: HTMLVideoElement | null) => {
 
@@ -40,30 +59,13 @@ const Content = (props: Props) => {
       return
     }
 
-    console.log(ownerMedia)
-    console.log(ownerMedia.getAudioTracks())
-    console.log(ownerMedia.getAudioTracks()[0])
-
-    if(video.srcObject.id === ownerMedia.id){
-      canvasMedia.removeTrack(canvasMedia.getVideoTracks()[0])
-      canvasMedia.addTrack(video.srcObject.getVideoTracks()[0])
-      video.srcObject = canvasMedia
-    }
-
-    video.srcObject.getAudioTracks().forEach((track:MediaStreamTrack) => track.enabled = true)
-
-    video.srcObject.getAudioTracks().forEach((track:MediaStreamTrack) => console.log(track))
+    updateOwnerMediaAudio(canvasMedia,ownerMedia,video)
+    video.srcObject.getAudioTracks().forEach(track => track.enabled = true);
 
     canvasVideos.push(video)
     setCanvasVideos(canvasVideos)
 
-    const canvasVideosId = canvasVideos.map((video) => {
-      if(!video || !video.srcObject || !('id' in video.srcObject)){
-        return
-      }else{
-        return video!.srcObject!.id
-      }
-    })
+    const canvasVideosId = getCanvasVideoId(canvasVideos)
 
     room.send({canvasVideosId:canvasVideosId})
   };
@@ -78,7 +80,8 @@ const Content = (props: Props) => {
       video.srcObject = canvasMedia
     }
 
-    video!.srcObject!.getAudioTracks().forEach((track:MediaStreamTrack) => track.enabled = false)
+    const muteAudio = mute(video.srcObject,false)
+    video.srcObject = muteAudio
 
     const index = canvasVideos.findIndex(item => item === video )
 
@@ -90,13 +93,7 @@ const Content = (props: Props) => {
     drawCanvas(canvas,canvasVideos,0)
     setCanvasVideos(canvasVideos)
 
-    const canvasVideosId = canvasVideos.map((video) => {
-      if(!video || !video.srcObject || !('id' in video.srcObject)){
-        return
-      }else{
-        return video!.srcObject!.id
-      }
-    })
+    const canvasVideosId = getCanvasVideoId(canvasVideos)
 
     room.send({canvasVideosId:canvasVideosId})
   }
@@ -123,14 +120,12 @@ const Content = (props: Props) => {
         },
         audio: true
       }
+
       const userMedia = navigator.mediaDevices.getUserMedia(videoOptions)
 
       userMedia.then((localStream) => {
-        setOwnerMedia(localStream)
 
         const canvasStream = setUpCanvas(canvas,localStream)
-
-        setCanvasMedia(canvasStream!)
 
         const room = peer.joinRoom(liveId!, {
           mode: 'sfu',
@@ -141,8 +136,8 @@ const Content = (props: Props) => {
 
            if(peer.id !== stream.peerId){
 
-            stream.getAudioTracks().forEach((track:MediaStreamTrack) => track.enabled = false)
-            setGuestMedia(stream)
+            const muteStream = mute(stream,false)
+            setGuestMedia(muteStream)
            }
         });
 
@@ -150,6 +145,8 @@ const Content = (props: Props) => {
           setLeaveId(peerId)
         });
 
+        setOwnerMedia(localStream)
+        setCanvasMedia(canvasStream!)
         setRoom(room)
      })
     })

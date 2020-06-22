@@ -1,17 +1,14 @@
 type Props = {
-  canvasVideos:Array<HTMLVideoElement>,
-  mixedMedia: MediaStream|null,
-  audio:React.RefObject<HTMLAudioElement>,
-  room:any
+  stream: MediaStream|null,
+  mute:boolean
 };
 
-export const muteAudio = (props:Props)=>{
+export const mute = ( stream: MediaStream|null, mute:boolean )=>{
 
-  if(!props.mixedMedia || !props.audio.current || 0 !== props.canvasVideos.length){
-    return
+  if(!stream ){
+    return null
   }
 
-  props.mixedMedia.getAudioTracks().forEach(track => track.enabled = false);
-  props.audio.current.srcObject = props.mixedMedia
-  props.room.replaceStream(props.mixedMedia)
+  stream.getAudioTracks().forEach(track => track.enabled = mute);
+  return stream
 }
