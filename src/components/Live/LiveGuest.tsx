@@ -5,7 +5,6 @@ import Peer from 'skyway-js'
 import Config from '../../config'
 import './LiveGuest.scss'
 import GuestAudio from './GuestAudio'
-import Guests from './Guests'
 
 
 type Props = {};

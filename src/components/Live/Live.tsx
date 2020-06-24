@@ -7,7 +7,6 @@ import Config from '../../config'
 import './Live.scss'
 import {setUpCanvas} from '../../utils/canvas/setUp'
 import {drawCanvas} from '../../utils/canvas/draw'
-import {mute} from '../../utils/audio/mute'
 
 type Props = {};
 
@@ -30,7 +29,6 @@ const Content = (props: Props) => {
   const [room, setRoom] = React.useState<any|null>(null)
   const [leaveId, setLeaveId] = React.useState<string|null>(null)
 
-
   const getCanvasVideoId = (canvasVideos:HTMLVideoElement[]) =>{
     return canvasVideos.map((video) => {
       if(!video || !video.srcObject || !('id' in video.srcObject)){
@@ -41,25 +39,12 @@ const Content = (props: Props) => {
     })
   }
 
-  const updateOwnerMediaAudio = ( canvasMedia:MediaStream|null, ownerMedia:MediaStream|null, video:HTMLVideoElement ) =>{
-
-    if(!canvasMedia || !video || !video.srcObject || !ownerMedia || !('id' in video.srcObject)){
-      return
-    }
-    if(video.srcObject.id === ownerMedia.id){
-      canvasMedia.removeTrack(canvasMedia.getVideoTracks()[0])
-      canvasMedia.addTrack(video.srcObject.getVideoTracks()[0])
-    }
-  }
-
-
   const canvasAddVideo = (video: HTMLVideoElement | null) => {
 
     if(!video || !video.srcObject || canvasVideos.includes(video) || !ownerMedia || !canvasMedia || !('id' in video.srcObject)){
       return
     }
 
-    updateOwnerMediaAudio(canvasMedia,ownerMedia,video)
     video.srcObject.getAudioTracks().forEach(track => track.enabled = true);
 
     canvasVideos.push(video)
@@ -80,8 +65,7 @@ const Content = (props: Props) => {
       video.srcObject = canvasMedia
     }
 
-    const muteAudio = mute(video.srcObject,false)
-    video.srcObject = muteAudio
+    video!.srcObject!.getAudioTracks().forEach(track => track.enabled = false);
 
     const index = canvasVideos.findIndex(item => item === video )
 
@@ -136,8 +120,8 @@ const Content = (props: Props) => {
 
            if(peer.id !== stream.peerId){
 
-            const muteStream = mute(stream,false)
-            setGuestMedia(muteStream)
+            stream.getAudioTracks().forEach(track => track.enabled = false);
+            setGuestMedia(stream)
            }
         });
 

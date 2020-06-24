@@ -14,7 +14,6 @@ const Content = (props: Props) => {
 
   const guestVideo = React.useRef<any>(null)
   const [switchBtn, setSwitchBtn] = React.useState<boolean>(false)
-  const [muted, setMuted] = React.useState<boolean>(true)
 
   React.useEffect(() => {
 
