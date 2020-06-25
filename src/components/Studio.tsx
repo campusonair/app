@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Container, Row, Col } from 'react-bootstrap'
-import { useParams } from "react-router-dom"
+// import { useParams } from "react-router-dom"
 import Video from './Video'
 import LiveCanvas from './Studio/LiveCanvas'
 import InviteButton from './InviteButton'
@@ -10,7 +10,7 @@ import './Studio.scss'
 type Props = {};
 
 const Content = (props: Props) => {
-  const { liveId } = useParams()
+  // const { liveId } = useParams()
 
   const videoOptions = {
     video: {

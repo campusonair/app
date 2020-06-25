@@ -6,7 +6,9 @@ export const setUpCanvas = (canvas:React.RefObject<CanvasElement>,localStream:Me
   if(!canvas.current?.captureStream()){
     return
   }
-  localStream.addTrack(canvas.current?.captureStream().getVideoTracks()[0])
+  const video_stream = new MediaStream();
+  video_stream.addTrack(canvas.current?.captureStream().getVideoTracks()[0])
   localStream.getAudioTracks().forEach(track => track.enabled = false);
-  return localStream
+  video_stream.addTrack(localStream.getAudioTracks()[0])
+  return video_stream
 }

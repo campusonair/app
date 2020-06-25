@@ -32,7 +32,7 @@ const Content = (props: Props) => {
   const getCanvasVideoId = (canvasVideos:HTMLVideoElement[]) =>{
     return canvasVideos.map((video) => {
       if(!video || !video.srcObject || !('id' in video.srcObject)){
-        return
+        return ""
       }else{
         return video!.srcObject!.id
       }
@@ -41,8 +41,14 @@ const Content = (props: Props) => {
 
   const canvasAddVideo = (video: HTMLVideoElement | null) => {
 
-    if(!video || !video.srcObject || canvasVideos.includes(video) || !ownerMedia || !canvasMedia || !('id' in video.srcObject)){
+    if(!video || !video.srcObject || canvasVideos.includes(video) || !ownerMedia || !canvasMedia || !('id' in video.srcObject) || !canvas.current){
       return
+    }
+
+    if(video.srcObject.id === ownerMedia.id){
+      canvasMedia.removeTrack(canvasMedia.getVideoTracks()[0])
+      canvasMedia.addTrack(video.srcObject.getVideoTracks()[0])
+      video.srcObject = canvasMedia
     }
 
     video.srcObject.getAudioTracks().forEach(track => track.enabled = true);
@@ -55,40 +61,33 @@ const Content = (props: Props) => {
     room.send({canvasVideosId:canvasVideosId})
   };
 
-  const canvasRemoveVideo =(video: HTMLVideoElement | null)=> {
+  const removeVideo = (canvasVideos:HTMLVideoElement[],peerId:string) =>{
+    const index = canvasVideos.findIndex((item:any) => {return item.srcObject.peerId === peerId} )
+    if(-1 === index){
+      return canvasVideos
+    }
+    canvasVideos.splice(index,1)
+    drawCanvas(canvas,canvasVideos,0)
+    return canvasVideos
+  }
+
+  const canvasRemoveVideo =(video: any | null)=> {
 
     if(!video || !video.srcObject || !ownerMedia || !('id' in video.srcObject)){
       return
     }
-
-    if(video.srcObject.id === ownerMedia.id){
-      video.srcObject = canvasMedia
-    }
-
-    video!.srcObject!.getAudioTracks().forEach(track => track.enabled = false);
-
-    const index = canvasVideos.findIndex(item => item === video )
-
-    if(-1 === index){
-      return
-    }
-
-    canvasVideos.splice(index,1)
-    drawCanvas(canvas,canvasVideos,0)
-    setCanvasVideos(canvasVideos)
-
+    video!.srcObject!.getAudioTracks().forEach((track:any) => track.enabled = false);
+    setCanvasVideos(removeVideo(canvasVideos, video.srcObject.peerId))
     const canvasVideosId = getCanvasVideoId(canvasVideos)
-
     room.send({canvasVideosId:canvasVideosId})
   }
-
 
   React.useEffect(() => {
     if (!canvas.current || !canvasVideos) {
       return;
     }
     drawCanvas(canvas,canvasVideos,0)
-  }, []);
+  }, [canvasVideos]);
 
 
   React.useEffect(() => {
@@ -126,7 +125,12 @@ const Content = (props: Props) => {
         });
 
         room.on('peerLeave', peerId => {
+
           setLeaveId(peerId)
+          setCanvasVideos((canvasVideos)=>{
+            return removeVideo(canvasVideos,peerId)
+          })
+
         });
 
         setOwnerMedia(localStream)
@@ -150,7 +154,7 @@ const Content = (props: Props) => {
           </div>
           <div className={"videos"}>
             <div className={"me"}>
-              <Guest media={ownerMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} muted={true}/>
+              <Guest media={ownerMedia} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} muted={true}/>
             </div>
             <Guests media={guestMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} muted={false}/>
             <Button variant="secondary">+</Button>

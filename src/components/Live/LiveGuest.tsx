@@ -91,7 +91,7 @@ const Content = (props: Props) => {
     }
     canvas!.current!.srcObject = find
 
-  }, [canvas.current,guestStream,canvasPeerId]);
+  }, [guestStream,canvasPeerId]);
 
 
   return (
@@ -102,7 +102,7 @@ const Content = (props: Props) => {
           <video ref={canvas} autoPlay={true} className={"canvas"} width={"1280"} height={"720"} muted={true}/>
           <div className={"videos"}>
             <div className={"me"}>
-              <Guest media={ownerMedia} canvasAddVideo={()=>{}} canvasRemoveVideo={()=>{}} leave={""} muted={true}/>
+              <Guest media={ownerMedia} canvasAddVideo={()=>{}} canvasRemoveVideo={()=>{}} muted={true}/>
             </div>
           </div>
           <div className={"guest audio"}>

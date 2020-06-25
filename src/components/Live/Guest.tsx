@@ -6,7 +6,6 @@ type Props = {
   media: MediaStream| null,
   canvasAddVideo:(video: HTMLVideoElement | null ) => void,
   canvasRemoveVideo:(video: HTMLVideoElement | null ) => void,
-  leave: string | null,
   muted:boolean
 };
 
@@ -17,21 +16,15 @@ const Content = (props: Props) => {
 
   React.useEffect(() => {
 
+  }, [])
+
+  React.useEffect(() => {
+
     if(!guestVideo || !guestVideo.current || !props.media){
       return
     }
     guestVideo.current.srcObject = props.media
-  }, [guestVideo, props])
-
-  React.useEffect(() => {
-    if(!guestVideo || !guestVideo.current || !props.leave || !guestVideo.current.srcObject){
-      return
-    }
-
-    if(props.leave === guestVideo.current?.srcObject!.peerId){
-      props.canvasRemoveVideo(guestVideo.current)
-    }
-  }, [props.leave])
+  }, [guestVideo,props.media])
 
   const addVideo = (props:Props)=>{
     if(!props.media || !guestVideo.current){
