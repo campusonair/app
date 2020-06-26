@@ -48,7 +48,7 @@ const Content = (props: Props) => {
     <div className={"guest video"}>
       {!switchBtn && <Button onClick={()=>{addVideo(props)}} className={"add-video-canvas"}>Add</Button>}
       {switchBtn && <Button onClick={()=>{removeVideo(props)}} className={"remove-video-canvas"}>Remove</Button>}
-      <video ref={guestVideo} autoPlay={true} muted={props.muted}/>
+      <video ref={guestVideo} autoPlay playsInline muted={props.muted}/>
     </div>
   );
 };

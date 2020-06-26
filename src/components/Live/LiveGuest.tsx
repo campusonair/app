@@ -93,13 +93,12 @@ const Content = (props: Props) => {
 
   }, [guestStream,canvasPeerId]);
 
-
   return (
     <div className={"live-container guest"}>
     <Container fluid>
       <Row>
       <Col xs={12} md={9}>
-          <video ref={canvas} autoPlay={true} className={"canvas"} width={"1280"} height={"720"} muted={true}/>
+          <video ref={canvas} autoPlay playsInline className={"canvas"} width={"1280"} height={"720"} muted={true}/>
           <div className={"videos"}>
             <div className={"me"}>
               <Guest media={ownerMedia} canvasAddVideo={()=>{}} canvasRemoveVideo={()=>{}} muted={true}/>
