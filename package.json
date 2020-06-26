@@ -14,7 +14,6 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "skyway-js": "^2.0.5",
-    "tailwindcss": "^1.4.6"
   },
   "scripts": {
     "start": ". ./.env && react-scripts start",
