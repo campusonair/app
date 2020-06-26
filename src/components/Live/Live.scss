@@ -1,11 +1,7 @@
 .live-container{
   height: 93vh;
   padding: 0 100px;
-  background-color: #F5F5F5;
-  .canvas, .sidebar, .video{
-    background-color: #000000;
-    border: 1px solid gray;
-  }
+  background-color: #f9fbfd;
   .canvas{
     width: 80%;
     height: auto;
@@ -40,12 +36,12 @@
     display: flex;
     max-width: 1200px;
     .me{
-      max-height: 100px;
+      max-height: 110px;
     }
     .video{
       width: 180px;
       min-width: 180px;
-      height: 100px;
+      height: 110px;
       position: relative;
       display: flex;
       margin: 0 10px;

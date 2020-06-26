@@ -5,7 +5,7 @@ import Peer from 'skyway-js'
 import Config from '../../config'
 import './LiveGuest.scss'
 import GuestAudio from './GuestAudio'
-
+import {useStyles} from '../../assets/mui-styles'
 
 type Props = {};
 type roomData = {
@@ -17,6 +17,7 @@ type roomData = {
 
 const Content = (props: Props) => {
 
+  const classes = useStyles();
   // const { liveId } = useParams()
   const liveId  = 'devRoom'
 
@@ -97,8 +98,8 @@ const Content = (props: Props) => {
     <div className={"live-container guest"}>
     <Container fluid>
       <Row>
-      <Col xs={12} md={9}>
-          <video ref={canvas} autoPlay playsInline className={"canvas"} width={"1280"} height={"720"} muted={true}/>
+      <Col xs={12} md={12}>
+          <video ref={canvas} autoPlay playsInline className={`canvas ${classes.canvas}`} width={"1280"} height={"720"} muted={true}/>
           <div className={"videos"}>
             <div className={"me"}>
               <Guest media={ownerMedia} canvasAddVideo={()=>{}} canvasRemoveVideo={()=>{}} muted={true}/>
@@ -111,9 +112,6 @@ const Content = (props: Props) => {
             })
           }
           </div>
-        </Col>
-        <Col xs={12} md={3}>
-          <div className={"sidebar"}>Sidebar</div>
         </Col>
       </Row>
     </Container>

@@ -3,8 +3,10 @@ import { Navbar, NavDropdown, Button } from 'react-bootstrap'
 import { useAuth0 } from "../react-auth0-spa";
 import { ReactComponent as Logo } from '../assets/logo.svg';
 import "./Header.scss"
+import {useStyles} from '../assets/mui-styles'
 
 const NavBar = () => {
+  const classes = useStyles();
   const { isAuthenticated, loginWithRedirect, logout, loading, user } = useAuth0();
   const [userName, setUserName] = React.useState<string>('')
 
@@ -15,9 +17,9 @@ const NavBar = () => {
   }, [loading, user, isAuthenticated])
 
   return (
-    <Navbar className="justify-content-between">
+    <Navbar className={`justify-content-between ${classes.navbar}`}>
       <Navbar.Brand href="/"><Logo /></Navbar.Brand>
-      {!isAuthenticated && !loading && (<Button onClick={() => loginWithRedirect({})}>Log in</Button>)}
+      {!isAuthenticated && !loading && (<Button className={`${classes.btn_primary}`} onClick={() => loginWithRedirect({})}>Log in</Button>)}
       {userName &&
         <NavDropdown title={userName} id="basic-nav-dropdown" alignRight>
           <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>

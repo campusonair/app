@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Button } from 'react-bootstrap'
+import {useStyles} from '../../assets/mui-styles'
 import './Guest.scss'
 
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
 
 const Content = (props: Props) => {
 
+  const classes = useStyles();
   const guestVideo = React.useRef<any>(null)
   const [switchBtn, setSwitchBtn] = React.useState<boolean>(false)
 
@@ -45,10 +47,10 @@ const Content = (props: Props) => {
   }
 
   return (
-    <div className={"guest video"}>
-      {!switchBtn && <Button onClick={()=>{addVideo(props)}} className={"add-video-canvas"}>Add</Button>}
-      {switchBtn && <Button onClick={()=>{removeVideo(props)}} className={"remove-video-canvas"}>Remove</Button>}
-      <video ref={guestVideo} autoPlay playsInline muted={props.muted}/>
+    <div className={`guest video ${classes.card} ${classes.video}`}>
+      {!switchBtn && <Button onClick={()=>{addVideo(props)}} className={`add-video-canvas ${classes.btn_primary} ${classes.add_video}`}>Add</Button>}
+      {switchBtn && <Button onClick={()=>{removeVideo(props)}} className={`remove-video-canvas ${classes.btn_primary} ${classes.remove_video}`}>Remove</Button>}
+      <video ref={guestVideo} autoPlay={true} muted={props.muted}/>
     </div>
   );
 };

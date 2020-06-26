@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Container,Row,Col, Button } from 'react-bootstrap'
+import { Container,Row,Col } from 'react-bootstrap'
 import Guests from './Guests'
 import Guest from './Guest'
 import Peer from 'skyway-js'
@@ -7,6 +7,7 @@ import Config from '../../config'
 import './Live.scss'
 import {setUpCanvas} from '../../utils/canvas/setUp'
 import {drawCanvas} from '../../utils/canvas/draw'
+import {useStyles} from '../../assets/mui-styles'
 
 type Props = {};
 
@@ -16,6 +17,7 @@ interface CanvasElement extends HTMLCanvasElement {
 
 const Content = (props: Props) => {
 
+  const classes = useStyles();
   // const { liveId } = useParams()
   const liveId  = 'devRoom'
 
@@ -146,7 +148,7 @@ const Content = (props: Props) => {
     <Container fluid>
       <Row>
         <Col xs={12} md={12}>
-          <canvas ref={canvas} className={"canvas"} width={"1280"} height={"720"}/>
+          <canvas ref={canvas} className={`canvas ${classes.canvas}`} width={"1280"} height={"720"}/>
           <div className={"scene"}>
           </div>
           <div className={"videos"}>
@@ -154,7 +156,6 @@ const Content = (props: Props) => {
               <Guest media={ownerMedia} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} muted={true}/>
             </div>
             <Guests media={guestMedia} leave={leaveId} canvasAddVideo={canvasAddVideo} canvasRemoveVideo={canvasRemoveVideo} muted={false}/>
-            <Button variant="secondary">+</Button>
           </div>
         </Col>
       </Row>
