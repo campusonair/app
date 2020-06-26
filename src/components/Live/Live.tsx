@@ -145,12 +145,13 @@ const Content = (props: Props) => {
     <div className={"live-container"}>
     <Container fluid>
       <Row>
-        <Col xs={12} md={9}>
+        <Col xs={12} md={12}>
+        {/* <Col xs={12} md={9}> */}
           <canvas ref={canvas} className={"canvas"} width={"1280"} height={"720"}/>
           <div className={"scene"}>
-            <Button variant="secondary">Scene1</Button>
+            {/* <Button variant="secondary">Scene1</Button>
             <Button variant="secondary">Scene2</Button>
-            <Button variant="secondary">Scene3</Button>
+            <Button variant="secondary">Scene3</Button> */}
           </div>
           <div className={"videos"}>
             <div className={"me"}>
@@ -160,9 +161,9 @@ const Content = (props: Props) => {
             <Button variant="secondary">+</Button>
           </div>
         </Col>
-        <Col xs={12} md={3}>
+        {/* <Col xs={12} md={3}>
           <div className={"sidebar"}>Sidebar</div>
-        </Col>
+        </Col> */}
       </Row>
     </Container>
     </div>
