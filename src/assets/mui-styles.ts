@@ -2,8 +2,12 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles({
   navbar:{
-    background: "#fff",
-    borderBottom: "1px solid #e3ebf6"
+    background: "#f9fbfd",
+    padding: ".5rem 3rem",
+    height:"10vh"
+  },
+  logo:{
+    height:"55px"
   },
   canvas:{
     background: "#ffffff",
@@ -13,59 +17,30 @@ export const useStyles = makeStyles({
   },
   btn_primary:{
     color: "#fff",
-    backgroundColor: "#506ee4",
-    borderColor: "#506ee4",
+    backgroundColor: "#3A0088",
+    borderColor: " #3A0088",
     border: "1px solid transparent",
     borderRadius: ".375rem",
     transition: "color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out",
     '&:hover': {
       color: "#fff",
-      backgroundColor: "#335de7",
-      borderColor: "#335de7",
-    },
-    '&:not(:disabled):not(.disabled):active':{
-      color: "#fff",
-      backgroundColor: "#2754e6",
-      borderColor: "#1c4be4",
+      backgroundColor: "#3A0088",
+      borderColor: "#3A0088",
     },
     '&:focus': {
       color: "#fff",
-      backgroundColor: "#335de7",
-      borderColor: "#2754e6",
+      backgroundColor: "#3A0088",
+      borderColor: "#3A0088",
       boxShadow: "none"
+    },
+    '&:not(:disabled):not(.disabled):active':{
+      color: "#fff",
+      backgroundColor: "rgba(58, 0, 136, .8)",
+      borderColor: "#3A0088",
+    },
+    '&:not(:disabled):not(.disabled):active:focus':{
+      boxShadow: "0 0 0 0.2rem rgba(58, 0, 136, .5)"
     }
-  },
-  add_video: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    margin: "auto",
-    width: "100px",
-    height: "60px",
-    zIndex: 1,
-    opacity:0,
-    '&:hover': {
-      opacity:1
-    },
-  },
-  remove_video: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    margin: "auto",
-    width: "100px",
-    height: "60px",
-    zIndex: 1,
-  },
-  video:{
-    opacity: 1,
-    '&:hover': {
-      opacity:1
-    },
   },
   card:{
     borderColor: "#edf2f9",
@@ -76,6 +51,10 @@ export const useStyles = makeStyles({
   }
 });
 
+//Theme1
+//main-color: #3A0088
+
+// Theme2
 // main-color: #506ee4
 // light-main-color: #f0f3ff;
 // accent-color: #fd397a

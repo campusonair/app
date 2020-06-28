@@ -47,9 +47,9 @@ const Content = (props: Props) => {
   }
 
   return (
-    <div className={`guest video ${classes.card} ${classes.video}`}>
-      {!switchBtn && <Button onClick={()=>{addVideo(props)}} className={`add-video-canvas ${classes.btn_primary} ${classes.add_video}`}>Add</Button>}
-      {switchBtn && <Button onClick={()=>{removeVideo(props)}} className={`remove-video-canvas ${classes.btn_primary} ${classes.remove_video}`}>Remove</Button>}
+    <div className={`guest video ${classes.card} ${switchBtn && "container-add-video"}`}>
+      {!switchBtn && <Button onClick={()=>{addVideo(props)}} className={`add-video-canvas ${classes.btn_primary}`}>Add</Button>}
+      {switchBtn && <Button onClick={()=>{removeVideo(props)}} className={`remove-video-canvas ${classes.btn_primary}`}>Remove</Button>}
       <video ref={guestVideo} autoPlay={true} muted={props.muted}/>
     </div>
   );

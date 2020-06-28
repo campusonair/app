@@ -3,4 +3,43 @@
 }
 .guest.video{
   width: 400px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  &:hover{
+    opacity:1;
+    transition: opacity 0.3s;
+  }
 }
+.guest.video:hover .add-video-canvas{
+  opacity:1;
+  transition: opacity 0.3s;
+}
+.guest.video.container-add-video{
+  opacity: 1;
+  transition: opacity 1s;
+}
+.add-video-canvas{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  width: 100px;
+  height: 60px;
+  z-index: 1;
+  opacity:0;
+  transition: opacity 0.2s;
+}
+.remove-video-canvas{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  width: 100px;
+  height: 60px;
+  z-index: 1;
+}
+

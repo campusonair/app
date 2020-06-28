@@ -3,8 +3,13 @@
     display: flex;
     justify-content: center;
     margin: 30px auto;
-    .me button{
-      display: none
+    .me{
+      .guest.video{
+        opacity: 1;
+        button{
+          display: none;
+        }
+      }
     }
   }
 }

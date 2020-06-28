@@ -1,5 +1,5 @@
 .live-container{
-  height: 93vh;
+  height: 90vh;
   padding: 0 100px;
   background-color: #f9fbfd;
   .canvas{
@@ -8,7 +8,7 @@
     position: relative;
     display: flex;
     margin: auto;
-    margin-top: 15px;
+    margin-top: 0;
     max-width: 900px;
     &::before {
       content: "";

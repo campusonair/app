@@ -1,7 +1,8 @@
 import React from "react";
 import { Navbar, NavDropdown, Button } from 'react-bootstrap'
 import { useAuth0 } from "../react-auth0-spa";
-import { ReactComponent as Logo } from '../assets/logo.svg';
+// import { ReactComponent as Logo } from '../assets/logo.svg';
+import logo from '../assets/logo.png';
 import "./Header.scss"
 import {useStyles} from '../assets/mui-styles'
 
@@ -18,7 +19,7 @@ const NavBar = () => {
 
   return (
     <Navbar className={`justify-content-between ${classes.navbar}`}>
-      <Navbar.Brand href="/"><Logo /></Navbar.Brand>
+      <Navbar.Brand href="/"><img src={logo} className={`${classes.logo}`} alt="Logo" /></Navbar.Brand>
       {!isAuthenticated && !loading && (<Button className={`${classes.btn_primary}`} onClick={() => loginWithRedirect({})}>Log in</Button>)}
       {userName &&
         <NavDropdown title={userName} id="basic-nav-dropdown" alignRight>
