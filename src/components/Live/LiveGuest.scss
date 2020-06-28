@@ -1,0 +1,24 @@
+.live-container.guest{
+  .videos{
+    display: flex;
+    justify-content: center;
+    margin: 30px auto;
+    .me{
+      .guest.video{
+        opacity: 1;
+        button{
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .live-container{
+    padding: 0;
+    .sidebar{
+      height: 400px;
+    }
+  }
+}

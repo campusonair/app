@@ -1,9 +1,10 @@
 {
-  "name": "iemeshi.jp",
+  "name": "goricast.com",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.8.1",
+    "@material-ui/core": "^4.10.2",
     "@wordpress/i18n": "^3.12.0",
     "bootstrap": "^4.4.1",
     "react": "^16.13.1",

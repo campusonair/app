@@ -1,6 +1,53 @@
-.videos-container{
-  margin-bottom: 1rem;
+.live-container{
+  height: 90vh;
+  padding: 0 100px;
+  background-color: #f9fbfd;
+  .canvas{
+    width: 80%;
+    height: auto;
+    position: relative;
+    display: flex;
+    margin: auto;
+    margin-top: 0;
+    max-width: 900px;
+    &::before {
+      content: "";
+      display: block;
+      padding-top: 56.25%;
+    }
+    //TODO : Fix later.
+    .add-video-canvas, .remove-video-canvas{
+      display: none;
+    }
+  }
+  .scene{
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    button{
+      margin: 10px;
+      padding: 9px 10px;
+    }
+  }
+  .scene+.videos{
+    margin: 30px auto;
+  }
   .videos{
-    margin: 1rem 0;
+    display: flex;
+    max-width: 1200px;
+    .me{
+      max-height: 110px;
+    }
+    .video{
+      width: 180px;
+      min-width: 180px;
+      height: 110px;
+      position: relative;
+      display: flex;
+      margin: 0 10px;
+    }
+  }
+  .sidebar{
+    height: 93vh;
   }
 }
